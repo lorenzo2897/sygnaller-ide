@@ -1,27 +1,43 @@
 # Sygnaller
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.1.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+A cross-domain signal processing IDE
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+`npm run serve` — Serve the webview contents in a browser with live reload
 
-## Running unit tests
+`npm run build-angular` — Only build the webview contents
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+`npm run build-electron` — Build the webview contents and the electron app
 
-## Running end-to-end tests
+`npm run electron` — Just run the electron app, no building
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Configuring Semantic-UI
 
-## Further help
+#### Changing the theme
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Edit `semantic/src/theme.config` and replace all instances with desired theme name
+
+#### Building the CSS file
+
+```
+npm run build-semantic
+```
+
+## Testing
+
+```
+npm run test
+```
+
+```
+npm run e2e
+```
+
+## Packaging
+
+Packaged executable can only be built for the current host platform.
+
+```
+npm run package
+```

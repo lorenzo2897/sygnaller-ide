@@ -11,14 +11,15 @@
   "main": "dist/electron/app.js",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "semantic": "cd semantic && gulp build",
-    "electron": "ng build --base-href ./ && tsc --p electron && electron .",
-    "package": "electron-packager . --ignore='(src|electron|e2e|tests)'"
+    "serve": "ng serve",
+    "build-angular": "ng build --base-href ./",
+    "build-semantic": "cd semantic && gulp build",
+    "build-electron": "npm run build-angular && tsc --p electron && electron .",
+    "electron": "electron .",
+    "package": "electron-packager . --ignore='(src|e2e|tests)'"
   },
   "private": true,
   "dependencies": {
