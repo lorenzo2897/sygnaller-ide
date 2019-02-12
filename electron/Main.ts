@@ -26,7 +26,13 @@ export default class Main {
     }
 
     private static createWindow() {
-        Main.window = new BrowserWindow({ width: 800, height: 600 });
+        Main.window = new BrowserWindow({
+            width: 1200,
+            height: 800,
+            webPreferences: {
+              nodeIntegration: true
+            }
+        });
         Main.window.loadURL(
             url.format({
                 pathname: path.join(__dirname, `/../../dist/sygnaller/index.html`),
