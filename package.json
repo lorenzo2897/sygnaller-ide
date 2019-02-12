@@ -1,6 +1,13 @@
 {
   "name": "sygnaller",
   "version": "0.0.0",
+  "description": "Sygnaller cross-domain signal processing IDE",
+  "author": "Lorenzo Silvestri",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lorenzo2897/sygnaller-ide.git"
+  },
   "main": "dist/electron/app.js",
   "scripts": {
     "ng": "ng",
