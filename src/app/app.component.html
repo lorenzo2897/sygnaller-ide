@@ -5,18 +5,17 @@
     {{fdata}}
 </div>
 
-<button class="ui button" (click)="editorMode = 'python'">Python</button>
-<button class="ui button" (click)="editorMode = 'verilog'">Verilog</button>
+<button class="ui button" (click)="editorFilename = 'untitled.py'">Python</button>
+<button class="ui button" (click)="editorFilename = 'untitled.v'">Verilog</button>
+<button class="ui button" (click)="editorFilename = 'untitled.txt'">Text</button>
 
-<button class="ui button" (click)="editorTheme = 'chrome'">Light</button>
-<button class="ui button" (click)="editorTheme = 'monokai'">Dark</button>
+<button class="ui button" (click)="editorDarkTheme = false">Light</button>
+<button class="ui button" (click)="editorDarkTheme = true">Dark</button>
 
-<ace-editor
-  [(text)]="editorText"
-  [mode]="editorMode"
-  [options]="editorOptions"
-  [theme]="editorTheme"
-  #editor
-  style="height:calc(100vh - 300px);"></ace-editor>
+<app-code-editor
+  [contents]="editorContents"
+  [darkTheme]="editorDarkTheme"
+  [filename]="editorFilename">
+</app-code-editor>
 
 <button class="ui button" (click)="pingGoogle()">Ping test</button>

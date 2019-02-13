@@ -5,10 +5,12 @@ import {SuiModule} from 'ng2-semantic-ui';
 import { AceEditorModule } from 'ng2-ace-editor';
 
 import { AppComponent } from './app.component';
+import { CodeEditorComponent } from './components/code-editor/code-editor.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CodeEditorComponent
   ],
   imports: [
     BrowserModule,
