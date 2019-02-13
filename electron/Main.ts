@@ -1,8 +1,6 @@
 import { BrowserWindow } from 'electron';
-import * as fs from "fs";
 import * as path from "path";
 import * as url from "url";
-import * as electron from 'electron';
 
 export default class Main {
     static window: Electron.BrowserWindow;
@@ -28,33 +26,16 @@ export default class Main {
     }
 
     private static createWindow() {
-        //Intercept any urls on the page and find the file on disk instead
-        electron.protocol.interceptFileProtocol('file', function(req, callback) {
-          var url = req.url.substr(7);
-          console.log(url);
-          var p = path.join(__dirname, `/../../dist/${url}`);
-          if (fs.existsSync(p)) {
-            callback(p);
-          } else {
-            callback(path.join('/', url));
-          }
-        },function (error) {
-          if (error) {
-            console.error('Failed to register protocol');
-          }
-        });
-
         Main.window = new BrowserWindow({
             width: 1200,
             height: 800,
             webPreferences: {
-              nodeIntegration: true,
-              webSecurity: false
+              nodeIntegration: true
             }
         });
         Main.window.loadURL(
             url.format({
-                pathname: 'index.html', // path.join(__dirname, `/../../dist/index.html`),
+                pathname: path.join(__dirname, `/../../dist/sygnaller/index.html`),
                 protocol: "file:",
                 slashes: true
             })
