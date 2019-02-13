@@ -13,11 +13,10 @@ export class AppComponent implements AfterViewInit {
 
   @ViewChild('editor') editor;
   editorMode: string = 'python';
-  editorTheme: string = 'eclipse';
+  editorTheme: string = 'chrome';
   editorText: string = "";
   editorOptions = {
     printMargin: false,
-    enableSnippets: true,
     enableBasicAutocompletion: true,
     enableLiveAutocompletion: true,
     useSoftTabs: true
@@ -48,8 +47,25 @@ export class AppComponent implements AfterViewInit {
         }
       }
   }
+
   onDragOver(event) {
       event.stopPropagation();
       event.preventDefault();
+  }
+
+  pingGoogle() {
+    let exec = this.electron.remote.require('child_process').exec;
+
+    let callback = (err, stdout, stderr) => {
+      if (err) {
+        console.log(`exec error: ${err}`);
+        return;
+      }else{
+        console.log(stdout);
+        this.editorText = `${stdout}`;
+      }
+    };
+
+    exec('ping -c 1 8.8.8.8', callback);
   }
 }
