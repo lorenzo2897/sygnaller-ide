@@ -2,6 +2,14 @@
 
 A cross-domain signal processing IDE
 
+## Prepare
+
+Requires node and npm to build.
+
+```
+npm install
+```
+
 ## Build
 
 `npm run serve` — Serve the webview contents in a browser with live reload
