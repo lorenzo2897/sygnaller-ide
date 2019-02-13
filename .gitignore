@@ -5,6 +5,7 @@
 /tmp
 /out-tsc
 /semantic/dist
+/*-darwin-x64
 
 # dependencies
 /node_modules
@@ -32,7 +33,6 @@ speed-measure-plugin.json
 /coverage
 /libpeerconnection.log
 npm-debug.log
-yarn-error.log
 testem.log
 /typings
 
