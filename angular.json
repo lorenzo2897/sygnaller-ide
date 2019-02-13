@@ -29,7 +29,12 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "node_modules/ace-builds/src-min/ace.js",
+              "node_modules/ace-builds/src-min/mode-python.js",
+              "node_modules/ace-builds/src-min/mode-verilog.js",
+              "node_modules/ace-builds/src-min/ext-language_tools.js"
+            ],
             "es5BrowserSupport": true
           },
           "configurations": {

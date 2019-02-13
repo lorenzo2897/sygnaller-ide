@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgxElectronModule } from 'ngx-electron';
 import {SuiModule} from 'ng2-semantic-ui';
+import { AceEditorModule } from 'ng2-ace-editor';
 
 import { AppComponent } from './app.component';
 
@@ -12,7 +13,8 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     NgxElectronModule,
-    SuiModule
+    SuiModule,
+    AceEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
