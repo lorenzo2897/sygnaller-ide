@@ -1,55 +1,82 @@
 
-
-<div class="ui secondary menu toolbar">
-  <div class="item">
-    <div class="ui buttons">
-      <button class="ui button">
-        <i class="plus icon"></i>New file
-      </button>
-      <div class="or"></div>
-      <button class="ui button">
-        <i class="folder open icon"></i>Import file
-      </button>
+<div class="toolbar">
+  <div class="ui secondary menu" *ngIf="project == null">
+    <div class="item">
+      <div class="ui buttons">
+        <button class="ui pink button">
+          <i class="plus icon"></i>New project
+        </button>
+        <div class="or"></div>
+        <button class="ui button">
+          <i class="folder open icon"></i>Open project
+        </button>
+      </div>
     </div>
   </div>
-
-  <div class="item">
-    <div class="ui buttons">
-      <button class="ui button" (click)="editorFilename = 'untitled.py'">Python</button>
-      <button class="ui button" (click)="editorFilename = 'untitled.v'">Verilog</button>
-      <button class="ui button" (click)="editorFilename = 'untitled.txt'">Text</button>
+  <div class="ui secondary menu" *ngIf="project != null">
+    <div class="item">
+      <div class="ui buttons">
+        <button class="ui button">
+          <i class="plus icon"></i>New file
+        </button>
+        <div class="or"></div>
+        <button class="ui button">
+          <i class="folder open icon"></i>Import file
+        </button>
+      </div>
     </div>
-  </div>
 
-  <div class="item">
-    <div class="ui buttons">
-      <button class="ui button" (click)="darkTheme = false">Light</button>
-      <button class="ui button" (click)="darkTheme = true">Dark</button>
+    <div class="item">
+      <div class="ui buttons">
+        <button class="ui button" (click)="editorFilename = 'untitled.py'">Python</button>
+        <button class="ui button" (click)="editorFilename = 'untitled.v'">Verilog</button>
+        <button class="ui button" (click)="editorFilename = 'untitled.txt'">Text</button>
+      </div>
     </div>
-  </div>
 
-  <div class="item">
-    <button class="ui button" (click)="pingGoogle()">Ping test</button>
+    <div class="item">
+      <div class="ui buttons">
+        <button class="ui button" (click)="darkTheme = false">Light</button>
+        <button class="ui button" (click)="darkTheme = true">Dark</button>
+      </div>
+    </div>
+
+    <div class="item">
+      <button class="ui button" (click)="pingGoogle()">Ping test</button>
+    </div>
   </div>
 </div>
 
 <div class="main">
   <div class="sidebar" [ngClass]="darkTheme ? 'dark' : ''">
 
+    <app-recent-projects
+      *ngIf="project == null"
+      [darkTheme]="darkTheme">
+    </app-recent-projects>
+
+    <app-sidebar
+      *ngIf="project != null"
+      [darkTheme]="darkTheme">
+    </app-sidebar>
+
+
     <div
-      style="padding-bottom: 8px"
+      style="margin-top: 100px; padding-bottom: 8px; color: #ddd;"
       (drop)="onDrop($event)"
       (dragover)="onDragOver($event)">
       {{fdata}}
     </div>
-
-    <app-sidebar
-      [darkTheme]="darkTheme">
-    </app-sidebar>
   </div>
 
+  <app-getting-started-page
+    *ngIf="project == null"
+    class="main-content">
+  </app-getting-started-page>
+
   <app-code-editor
-    class="code-editor"
+    *ngIf="project != null"
+    class="main-content"
     [contents]="editorContents"
     [darkTheme]="darkTheme"
     [filename]="editorFilename">

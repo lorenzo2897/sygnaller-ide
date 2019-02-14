@@ -1,5 +1,6 @@
 import {Component, NgZone} from '@angular/core';
 import { ElectronService } from 'ngx-electron';
+import {Project} from './classes/Project';
 
 
 @Component({
@@ -12,6 +13,7 @@ export class AppComponent {
   fdata = 'File drop test';
 
   darkTheme = false;
+  project: Project = null;
   editorFilename = 'untitled.py';
   editorContents = 'test';
 

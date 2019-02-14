@@ -21,6 +21,7 @@
   float: left;
   padding: 8px;
   height: 100%;
+  overflow-y: scroll;
 }
 .dark.sidebar {
   background: #3a3a34;
@@ -28,7 +29,7 @@
 }
 
 
-.code-editor {
+.main-content {
   flex: 1;
 }
 
