@@ -1,0 +1,38 @@
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.dark.sidebar {
+  background: #3a3a3a;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.toolbar {
+  width: 100%;
+  background-color: #c0c1c2 !important;
+  margin-bottom: 0;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  width: 260px;
+  float: left;
+  padding: 6px;
+  height: 100%;
+}
+
+.code-editor {
+  flex: 1;
+}
+
+.status-bar {
+  background: #c0c1c2;
+  padding: 2px 8px;
+}

@@ -1,21 +1,87 @@
 
-<div style="width: 600px; height: 200px; background: #DDF;"
-    (drop)="onDrop($event)"
-    (dragover)="onDragOver($event)">
-    {{fdata}}
+
+<div class="ui secondary menu toolbar">
+  <div class="item">
+    <div class="ui buttons">
+      <button class="ui button">
+        <i class="plus icon"></i>New file
+      </button>
+      <div class="or"></div>
+      <button class="ui button">
+        <i class="folder open icon"></i>Import file
+      </button>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="ui buttons">
+      <button class="ui button" (click)="editorFilename = 'untitled.py'">Python</button>
+      <button class="ui button" (click)="editorFilename = 'untitled.v'">Verilog</button>
+      <button class="ui button" (click)="editorFilename = 'untitled.txt'">Text</button>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="ui buttons">
+      <button class="ui button" (click)="darkTheme = false">Light</button>
+      <button class="ui button" (click)="darkTheme = true">Dark</button>
+    </div>
+  </div>
+
+  <div class="item">
+    <button class="ui button" (click)="pingGoogle()">Ping test</button>
+  </div>
 </div>
 
-<button class="ui button" (click)="editorFilename = 'untitled.py'">Python</button>
-<button class="ui button" (click)="editorFilename = 'untitled.v'">Verilog</button>
-<button class="ui button" (click)="editorFilename = 'untitled.txt'">Text</button>
+<div class="main">
+  <div class="sidebar" [ngClass]="darkTheme ? 'dark' : ''">
+    <div (drop)="onDrop($event)"
+         (dragover)="onDragOver($event)">
+      {{fdata}}
+    </div>
+    <h4 class="ui">Software files</h4>
+    <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
+      <a class="item">
+        example.py
+      </a>
+      <a class="item">
+        untitled.py
+      </a>
+      <a class="item">
+        main.py
+      </a>
+    </div>
+    <h4 class="ui">Hardware files</h4>
+    <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
+      <a class="item">
+        example.v
+      </a>
+      <a class="item">
+        untitled.v
+      </a>
+      <a class="item">
+        main.v
+      </a>
+    </div>
+    <h4 class="ui">Data files</h4>
+    <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
+      <a class="item">
+        table.csv
+      </a>
+      <a class="item">
+        sample.png
+      </a>
+    </div>
+  </div>
 
-<button class="ui button" (click)="editorDarkTheme = false">Light</button>
-<button class="ui button" (click)="editorDarkTheme = true">Dark</button>
+  <app-code-editor
+    class="code-editor"
+    [contents]="editorContents"
+    [darkTheme]="darkTheme"
+    [filename]="editorFilename">
+  </app-code-editor>
+</div>
 
-<app-code-editor
-  [contents]="editorContents"
-  [darkTheme]="editorDarkTheme"
-  [filename]="editorFilename">
-</app-code-editor>
-
-<button class="ui button" (click)="pingGoogle()">Ping test</button>
+<div class="status-bar">
+  Status bar
+</div>

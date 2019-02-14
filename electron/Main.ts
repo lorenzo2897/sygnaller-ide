@@ -29,6 +29,7 @@ export default class Main {
         Main.window = new BrowserWindow({
             width: 1200,
             height: 800,
+            backgroundColor: '#313131',
             webPreferences: {
               nodeIntegration: true
             }

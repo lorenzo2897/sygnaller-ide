@@ -11,7 +11,7 @@
       "packaged": "../src/assets/",
       "uncompressed": "dist/components/",
       "compressed": "dist/components/",
-      "themes": "dist/themes/"
+      "themes": "../src/assets/themes/"
     },
     "clean": "dist/"
   },

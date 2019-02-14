@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'sygnaller';
   fdata = 'File drop test';
 
-  editorDarkTheme = false;
+  darkTheme = false;
   editorFilename = 'untitled.py';
   editorContents = 'test';
 
