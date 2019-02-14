@@ -22,8 +22,10 @@ export class CodeEditorComponent implements AfterViewInit {
     }
   }
 
+  _dark: boolean = false;
   @Input()
   set darkTheme(val: boolean) {
+    this._dark = val;
     this.editorTheme = val ? 'monokai' : 'chrome';
   }
 

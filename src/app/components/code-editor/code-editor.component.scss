@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-title {
+  padding: 4px;
+  border-bottom: solid 1px rgba(127, 127, 127, 0.3);
+  border-left: solid 1px rgba(127, 127, 127, 0.3);
+  font-size: 0.9rem;
+}
+
+.editor-title.dark {
+  background: #272823;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.editor {
+  flex: 1;
+}

@@ -1,5 +1,10 @@
 
+<div class="editor-title" [ngClass]="_dark ? 'dark' : ''">
+  {{title}}
+</div>
+
 <ace-editor
+  class="editor"
   [(text)]="contents"
   [mode]="editorMode"
   [options]="editorOptions"
