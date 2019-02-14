@@ -5,11 +5,6 @@
   height: 100%;
 }
 
-.dark.sidebar {
-  background: #3a3a3a;
-  color: rgba(255, 255, 255, 0.8);
-}
-
 .toolbar {
   width: 100%;
   background-color: #c0c1c2 !important;
@@ -24,9 +19,14 @@
 .sidebar {
   width: 260px;
   float: left;
-  padding: 6px;
+  padding: 8px;
   height: 100%;
 }
+.dark {
+  background: #3a3a3a;
+  color: rgba(255, 255, 255, 0.8);
+}
+
 
 .code-editor {
   flex: 1;

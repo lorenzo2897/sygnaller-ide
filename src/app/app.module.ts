@@ -6,11 +6,13 @@ import { AceEditorModule } from 'ng2-ace-editor';
 
 import { AppComponent } from './app.component';
 import { CodeEditorComponent } from './components/code-editor/code-editor.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CodeEditorComponent
+    CodeEditorComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
