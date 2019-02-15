@@ -34,13 +34,18 @@ export default class Main {
               nodeIntegration: true
             }
         });
-        Main.window.loadURL(
-            url.format({
-                pathname: path.join(__dirname, `/../../dist/sygnaller/index.html`),
-                protocol: "file:",
-                slashes: true
-            })
-        );
+
+        let indexURL = url.format({
+          pathname: path.join(__dirname, `/../../dist/sygnaller/index.html`),
+          protocol: "file:",
+          slashes: true
+        });
+
+        if (process.argv.includes('live')) {
+          indexURL = 'http://localhost:4200/index.html';
+        }
+
+        Main.window.loadURL(indexURL);
         Main.window.on('closed', Main.onClose);
     }
 

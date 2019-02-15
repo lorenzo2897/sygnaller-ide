@@ -19,6 +19,7 @@
     "build-semantic": "cd semantic && gulp build",
     "build-electron": "npm run build-angular && tsc --p electron && electron .",
     "electron": "electron .",
+    "live-electron": "electron . live",
     "package": "electron-packager . --ignore='(src|e2e|tests)'"
   },
   "private": true,
