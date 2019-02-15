@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-code-editor',
@@ -8,6 +8,7 @@ import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 export class CodeEditorComponent implements AfterViewInit {
 
   @Input() contents: string = '';
+  @Output() contentsChange: EventEmitter<string> = new EventEmitter<string>();
 
   @Input()
   set filename(val: string) {
@@ -20,6 +21,8 @@ export class CodeEditorComponent implements AfterViewInit {
     } else {
       this.editorMode = 'text';
     }
+    this.editor.getEditor().focus();
+    this.editor.getEditor().selection.moveTo(0, 0);
   }
 
   _dark: boolean = false;
@@ -33,6 +36,7 @@ export class CodeEditorComponent implements AfterViewInit {
   title: string = '';
 
   @ViewChild('editor') editor;
+
   editorMode: string = 'python';
   editorTheme: string = 'chrome';
   editorOptions = {
@@ -53,6 +57,10 @@ export class CodeEditorComponent implements AfterViewInit {
 
       }
     })
+  }
+
+  textChanged() {
+    this.contentsChange.emit(this.contents);
   }
 
 }

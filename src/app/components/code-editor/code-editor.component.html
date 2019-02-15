@@ -6,6 +6,7 @@
 <ace-editor
   class="editor"
   [(text)]="contents"
+  (textChange)="textChanged()"
   [mode]="editorMode"
   [options]="editorOptions"
   [theme]="editorTheme"

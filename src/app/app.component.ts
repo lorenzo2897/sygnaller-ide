@@ -1,4 +1,4 @@
-import {Component, NgZone} from '@angular/core';
+import {Component, HostListener, NgZone} from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import {Project} from './classes/Project';
 import {Workspace} from './classes/Workspace';
@@ -12,13 +12,13 @@ import {SidebarSelection} from './components/sidebar/sidebar.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  fdata = 'File drop test';
 
   darkTheme = Workspace.darkMode;
   project: Project = null;
   activeSelection: SidebarSelection = null;
 
   editorFilename: string = null;
+  editorOriginalContents: string = '';
   editorContents: string = '';
 
   openModal_newProject = false;
@@ -63,6 +63,7 @@ export class AppComponent {
   }
 
   closeProject() {
+    this.saveFile();
     this.project = null;
     this.titleService.setTitle('Sygnaller');
   }
@@ -74,6 +75,8 @@ export class AppComponent {
 
   selectionChanged(selection: SidebarSelection) {
     if (!selection) return;
+
+    if (!this.saveFile()) return; // ensure we save before moving away!
     console.log('Selection changed:', selection.category, '/', selection.file);
 
     let isText = (s: SidebarSelection) => {
@@ -88,19 +91,40 @@ export class AppComponent {
 
     if (isText(selection)) {
       // read file into editor
-      this.editorFilename = this.electron.remote.require('path').join(selection.category, selection.file);
       let fullPath = this.electron.remote.require('path').resolve(this.project.path, selection.category, selection.file);
       this.electron.remote.require('fs').readFile(fullPath, 'utf-8', (err, data) => this.ngZone.run(() => {
         if (!err) {
           this.editorContents = data;
+          this.editorOriginalContents = this.editorContents;
+          setTimeout(() =>
+          this.editorFilename = this.electron.remote.require('path').join(selection.category, selection.file)
+          , 0);
         } else {
           this.editorContents = '';
+          this.editorFilename = '';
         }
       }));
     } else {
       // hide the editor
       this.editorFilename = null;
     }
+  }
+
+  saveFile() {
+    if (!this.editorFilename || this.editorContents === this.editorOriginalContents) return true;
+    let fullPath = this.electron.remote.require('path').resolve(this.project.path, this.editorFilename);
+    try {
+      console.log('Saving file', fullPath);
+      this.electron.remote.require('fs').writeFileSync(fullPath, this.editorContents, 'utf-8');
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  @HostListener('window:beforeunload')
+  doSomething() {
+    return this.saveFile();
   }
 
 }
