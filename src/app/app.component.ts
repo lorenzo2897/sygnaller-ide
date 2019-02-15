@@ -26,7 +26,9 @@ export class AppComponent {
   }
 
   createProject(data: any) {
-    Project.create(this.electron, data.name, data.path);
+    Project.create(this.electron, data.name, data.path)
+      .then(p => this.projectLoaded(p))
+      .catch(e => this.projectLoadError(e));
   }
 
   openProject() {
@@ -37,10 +39,22 @@ export class AppComponent {
       },
       dirs => {
         if (dirs && dirs.length > 0) {
-          Project.load(this.electron,dirs[0]);
+          Project.load(this.electron,dirs[0])
+            .then(p => this.projectLoaded(p))
+            .catch(e => this.projectLoadError(e));
         }
       }
     )
+  }
+
+  projectLoaded(project: Project) {
+    this.ngZone.run(() => {
+      this.project = project;
+    });
+  }
+
+  projectLoadError(error) {
+    this.electron.remote.dialog.showErrorBox('Cannot load project', error.toString())
   }
 
   onDrop(event) {

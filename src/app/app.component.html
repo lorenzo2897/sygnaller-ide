@@ -52,6 +52,7 @@
 
     <app-recent-projects
       *ngIf="project == null"
+      (loadProject)="projectLoaded($event)"
       [darkTheme]="darkTheme">
     </app-recent-projects>
 

@@ -1,7 +1,15 @@
 
 .item p {
   font-size: 0.9rem;
+  text-align: left;
+  direction: rtl;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .item h4 {
   margin-bottom: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
