@@ -42,7 +42,7 @@
     </div>
 
     <div class="item">
-      <button class="ui button" (click)="pingGoogle()">Ping test</button>
+      <button class="ui button" (click)="closeProject()">Close project</button>
     </div>
   </div>
 </div>
@@ -58,6 +58,7 @@
 
     <app-sidebar
       *ngIf="project != null"
+      [project]="project"
       [darkTheme]="darkTheme">
     </app-sidebar>
 

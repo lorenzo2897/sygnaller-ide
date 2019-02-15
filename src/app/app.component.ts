@@ -2,6 +2,7 @@ import {Component, NgZone} from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import {Project} from './classes/Project';
 import {Workspace} from './classes/Workspace';
+import {Title} from '@angular/platform-browser';
 
 
 @Component({
@@ -10,7 +11,6 @@ import {Workspace} from './classes/Workspace';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'sygnaller';
   fdata = 'File drop test';
 
   darkTheme = Workspace.darkMode;
@@ -20,7 +20,7 @@ export class AppComponent {
 
   openModal_newProject = false;
 
-  constructor(private electron: ElectronService, private ngZone: NgZone) {}
+  constructor(private electron: ElectronService, private ngZone: NgZone, private titleService: Title) {}
 
   openProjectWizard() {
     this.openModal_newProject = true;
@@ -51,11 +51,17 @@ export class AppComponent {
   projectLoaded(project: Project) {
     this.ngZone.run(() => {
       this.project = project;
+      this.titleService.setTitle(project.name + ' - Sygnaller');
     });
   }
 
   projectLoadError(error) {
     this.electron.remote.dialog.showErrorBox('Cannot load project', error.toString())
+  }
+
+  closeProject() {
+    this.project = null;
+    this.titleService.setTitle('Sygnaller');
   }
 
   setDarkMode(dark: boolean) {
@@ -84,19 +90,4 @@ export class AppComponent {
       event.preventDefault();
   }
 
-  pingGoogle() {
-    let exec = this.electron.remote.require('child_process').exec;
-
-    let callback = (err, stdout, stderr) => this.ngZone.run(() => {
-      if (err) {
-        console.log(`exec error: ${err}`);
-        return;
-      }else{
-        console.log(stdout);
-        this.fdata = `${stdout}`;
-      }
-    });
-
-    exec('ping -c 1 8.8.8.8', callback);
-  }
 }
