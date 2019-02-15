@@ -11,7 +11,7 @@ export class RenameFileModalComponent {
   @Input() modalTitle: string = 'Rename file';
 
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
-  @Output() createProject: EventEmitter<any> = new EventEmitter<any>();
+  @Output() renameFile: EventEmitter<any> = new EventEmitter<any>();
 
   _open: boolean;
 
@@ -55,7 +55,7 @@ export class RenameFileModalComponent {
     modal.approve();
 
     // fire event
-    this.createProject.emit(this.filename);
+    this.renameFile.emit(this.filename);
   }
 
 }

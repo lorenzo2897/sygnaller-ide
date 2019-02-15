@@ -28,6 +28,10 @@ export class SidebarComponent implements AfterViewInit {
   renameModal_placeholder = null;
   openModal_rename = false;
 
+  deleteModal_fullPath = null;
+  deleteModal_shortPath = null;
+  openModal_delete = false;
+
   constructor(private electron: ElectronService, private changeDetector: ChangeDetectorRef, private ngZone: NgZone) { }
 
   ngAfterViewInit() {
@@ -93,7 +97,7 @@ export class SidebarComponent implements AfterViewInit {
       },
       {
         label: 'Delete',
-        click: () => null
+        click: () => this.deleteFile(category, path)
       }
     ]);
     menu.popup();
@@ -116,5 +120,21 @@ export class SidebarComponent implements AfterViewInit {
   renameFileResult(newName) {
     let newFullPath = this.electron.remote.require('path').resolve(this.renameModal_dirname, newName);
     this.electron.remote.require('fs').renameSync(this.renameModal_oldPath, newFullPath);
+  }
+
+  deleteFile(category, path) {
+    this.ngZone.run(() => {
+      let fullPath = this.electron.remote.require('path').resolve(this.project.path, category, path);
+      let basename = this.electron.remote.require('path').basename(fullPath);
+
+      this.deleteModal_fullPath = fullPath;
+      this.deleteModal_shortPath = basename;
+
+      this.openModal_delete = true;
+    });
+  }
+
+  deleteFileConfirmed() {
+    this.electron.remote.require('fs').unlinkSync(this.deleteModal_fullPath);
   }
 }

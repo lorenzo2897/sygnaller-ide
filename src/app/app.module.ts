@@ -12,6 +12,7 @@ import { RecentProjectsComponent } from './components/recent-projects/recent-pro
 import { GettingStartedPageComponent } from './components/getting-started-page/getting-started-page.component';
 import { NewProjectModalComponent } from './modals/new-project-modal/new-project-modal.component';
 import { RenameFileModalComponent } from './modals/rename-file-modal/rename-file-modal.component';
+import { DeleteFileModalComponent } from './modals/delete-file-modal/delete-file-modal.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { RenameFileModalComponent } from './modals/rename-file-modal/rename-file
     RecentProjectsComponent,
     GettingStartedPageComponent,
     NewProjectModalComponent,
-    RenameFileModalComponent
+    RenameFileModalComponent,
+    DeleteFileModalComponent
   ],
   imports: [
     BrowserModule,

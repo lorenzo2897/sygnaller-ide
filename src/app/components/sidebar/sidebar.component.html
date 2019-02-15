@@ -41,5 +41,12 @@
   modalTitle="Rename file"
   [dirname]="renameModal_dirname"
   [filename]="renameModal_placeholder"
-  (createProject)="renameFileResult($event)">
+  (renameFile)="renameFileResult($event)">
 </app-rename-file-modal>
+
+<app-delete-file-modal
+  [open]="openModal_delete"
+  (close)="openModal_delete = false"
+  [filename]="deleteModal_shortPath"
+  (deleteFile)="deleteFileConfirmed()">
+</app-delete-file-modal>

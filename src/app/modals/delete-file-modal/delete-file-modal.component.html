@@ -1,0 +1,10 @@
+<sui-modal *ngIf="open" [isClosable]="true" transitionDuration="200" (dismissed)="close.emit()" #modal>
+  <div class="header">Delete file</div>
+  <div class="content">
+    Are you sure you want to delete {{filename}}?
+  </div>
+  <div class="actions">
+    <button class="ui basic button" (click)="modal.deny()">Never mind</button>
+    <button class="ui pink basic button" (click)="approved(modal)" autofocus>Delete</button>
+  </div>
+</sui-modal>
