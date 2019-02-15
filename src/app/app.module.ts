@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { NgxElectronModule } from 'ngx-electron';
 import {SuiModule} from 'ng2-semantic-ui';
@@ -9,6 +10,7 @@ import { CodeEditorComponent } from './components/code-editor/code-editor.compon
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { RecentProjectsComponent } from './components/recent-projects/recent-projects.component';
 import { GettingStartedPageComponent } from './components/getting-started-page/getting-started-page.component';
+import { NewProjectModalComponent } from './modals/new-project-modal/new-project-modal.component';
 
 @NgModule({
   declarations: [
@@ -16,10 +18,12 @@ import { GettingStartedPageComponent } from './components/getting-started-page/g
     CodeEditorComponent,
     SidebarComponent,
     RecentProjectsComponent,
-    GettingStartedPageComponent
+    GettingStartedPageComponent,
+    NewProjectModalComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     NgxElectronModule,
     SuiModule,
     AceEditorModule

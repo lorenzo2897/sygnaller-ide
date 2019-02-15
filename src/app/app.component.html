@@ -1,13 +1,13 @@
 
-<div class="toolbar">
+<div class="toolbar" [ngClass]="darkTheme ? 'dark' : ''"i>
   <div class="ui secondary menu" *ngIf="project == null">
     <div class="item">
       <div class="ui buttons">
-        <button class="ui pink button">
+        <button class="ui pink button" (click)="openProjectWizard()">
           <i class="plus icon"></i>New project
         </button>
         <div class="or"></div>
-        <button class="ui button">
+        <button class="ui button" (click)="openProject()">
           <i class="folder open icon"></i>Open project
         </button>
       </div>
@@ -83,6 +83,15 @@
   </app-code-editor>
 </div>
 
-<div class="status-bar">
+<div class="status-bar" [ngClass]="darkTheme ? 'dark' : ''">
   Status bar
 </div>
+
+
+<!-- Modals -->
+
+<app-new-project-modal
+  [open]="openModal_newProject"
+  (close)="openModal_newProject = false"
+  (createProject)="createProject($event)">
+</app-new-project-modal>

@@ -17,7 +17,21 @@ export class AppComponent {
   editorFilename = 'untitled.py';
   editorContents = 'test';
 
+  openModal_newProject = false;
+
   constructor(private electron: ElectronService, private ngZone: NgZone) {}
+
+  openProjectWizard() {
+    this.openModal_newProject = true;
+  }
+
+  createProject(data: any) {
+    Project.create(this.electron, data.name, data.path);
+  }
+
+  openProject() {
+    Project.load(this.electron,'');
+  }
 
   onDrop(event) {
       event.preventDefault();

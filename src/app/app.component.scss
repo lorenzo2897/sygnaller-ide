@@ -1,3 +1,4 @@
+@import "../styles";
 
 :host {
   display: flex;
@@ -7,8 +8,12 @@
 
 .toolbar {
   width: 100%;
-  background-color: #c0c1c2 !important;
+  background-color: $color-toolbar-light !important;
+  border-bottom: solid 1px rgba(127, 127, 127, 0.2);
   margin-bottom: 0;
+}
+.dark.toolbar {
+  background-color: $color-toolbar-dark !important;
 }
 
 .main {
@@ -34,6 +39,9 @@
 }
 
 .status-bar {
-  background: #c0c1c2;
+  background: $color-toolbar-light;
   padding: 2px 8px;
+}
+.dark.status-bar {
+  background: $color-toolbar-dark;
 }

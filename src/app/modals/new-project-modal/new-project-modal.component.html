@@ -1,0 +1,52 @@
+<sui-modal *ngIf="_open" [isClosable]="true" transitionDuration="200" (dismissed)="close.emit()" #modal>
+  <div class="header">New project</div>
+  <div class="content">
+    <div class="field">
+      <div class="ui fluid labeled input" [ngClass]="titleError ? 'error' : ''">
+        <div class="ui label" style="min-width: 140px;">
+          Project title
+        </div>
+        <input autofocus type="text" placeholder="Example project" [(ngModel)]="projectTitle" (keyup)="titleChanged()">
+      </div>
+      <div class="ui pointing red basic label" *ngIf="titleError">
+        Please enter a project title
+      </div>
+    </div>
+
+    <br>
+
+    <div class="field">
+      <div class="ui fluid labeled input" [ngClass]="filenameError ? 'error' : ''">
+        <div class="ui label" style="min-width: 140px;">
+          Project file name
+        </div>
+        <input type="text" placeholder="example-project" [(ngModel)]="projectFilename" (keyup)="filenameChanged()">
+      </div>
+      <div class="ui pointing red basic label" *ngIf="filenameError">
+        Project file names should only contain letters, numbers, and dashes
+      </div>
+    </div>
+
+    <br>
+
+    <div class="field">
+      <div class="ui fluid labeled action input" [ngClass]="pathError ? 'error' : ''">
+        <div class="ui label" style="min-width: 140px;">
+          Project path
+        </div>
+        <input type="text" [(ngModel)]="projectPath" (keyup)="pathError = false">
+        <button class="ui pink right labeled icon button" (click)="browseFolder()">
+          <i class="folder open outline icon"></i>
+          Browse
+        </button>
+      </div>
+      <div class="ui pointing red basic label" *ngIf="pathError">
+        Please enter a valid folder where the project can go
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="ui pink basic button" (click)="modal.deny()">Cancel</button>
+    <button class="ui green basic button" (click)="approved(modal)" autofocus>Create</button>
+  </div>
+</sui-modal>

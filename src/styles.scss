@@ -1,5 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
+$color-toolbar-light: #ecedee;
+$color-toolbar-dark: #5c5d5d;
+
+.ui.label {
+  cursor: default;
+}
+
+/* Allow icons in menus to be positioned on the left of text */
 .ui.vertical.menu .item > i.icon.left {
   float: none;
   margin: 0 0.35714286em 0 0;
