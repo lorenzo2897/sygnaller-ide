@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, NgZone, Output} from '@angular/core';
 import {Project} from '../../classes/Project';
 import {ElectronService} from 'ngx-electron';
 
@@ -23,7 +23,12 @@ export class SidebarComponent implements AfterViewInit {
   hardwareFiles: string[] = [];
   dataFiles: string[] = [];
 
-  constructor(private electron: ElectronService, private changeDetector: ChangeDetectorRef) { }
+  renameModal_oldPath = null;
+  renameModal_dirname = null;
+  renameModal_placeholder = null;
+  openModal_rename = false;
+
+  constructor(private electron: ElectronService, private changeDetector: ChangeDetectorRef, private ngZone: NgZone) { }
 
   ngAfterViewInit() {
     this.walkFileTree();
@@ -78,5 +83,38 @@ export class SidebarComponent implements AfterViewInit {
   fileClicked(category: string, path: string) {
     this.selection = {category: category, file: path};
     this.selectionChange.emit(this.selection);
+  }
+
+  showContextMenu(category: string, path: string) {
+    let menu = this.electron.remote.Menu.buildFromTemplate([
+      {
+        label: 'Rename',
+        click: () => this.renameFile(category, path)
+      },
+      {
+        label: 'Delete',
+        click: () => null
+      }
+    ]);
+    menu.popup();
+  }
+
+  renameFile(category, path) {
+    this.ngZone.run(() => {
+      let fullPath = this.electron.remote.require('path').resolve(this.project.path, category, path);
+      let dirname = this.electron.remote.require('path').dirname(fullPath);
+      let basename = this.electron.remote.require('path').basename(fullPath);
+
+      this.renameModal_oldPath = fullPath;
+      this.renameModal_dirname = dirname;
+      this.renameModal_placeholder = basename;
+
+      this.openModal_rename = true;
+    });
+  }
+
+  renameFileResult(newName) {
+    let newFullPath = this.electron.remote.require('path').resolve(this.renameModal_dirname, newName);
+    this.electron.remote.require('fs').renameSync(this.renameModal_oldPath, newFullPath);
   }
 }

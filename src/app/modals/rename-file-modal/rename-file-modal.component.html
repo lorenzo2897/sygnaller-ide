@@ -1,0 +1,27 @@
+<sui-modal *ngIf="_open" [isClosable]="true" transitionDuration="200" (dismissed)="close.emit()" #modal>
+  <div class="header">{{modalTitle}}</div>
+  <div class="content">
+    <div class="field">
+      <div class="ui fluid input" [ngClass]="error ? 'error' : ''">
+        <input autofocus
+               type="text"
+               placeholder="File name"
+               [(ngModel)]="filename"
+               (keyup)="keyup($event, modal)">
+      </div>
+      <div class="ui pointing red basic label" *ngIf="error == 1">
+        File name cannot be empty
+      </div>
+      <div class="ui pointing red basic label" *ngIf="error == 2">
+        File names should only contain letters, numbers, dashes, and underscores
+      </div>
+      <div class="ui pointing red basic label" *ngIf="error == 3">
+        This file already exists
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="ui pink basic button" (click)="modal.deny()">Cancel</button>
+    <button class="ui green basic button" (click)="approved(modal)" autofocus>Rename</button>
+  </div>
+</sui-modal>

@@ -3,7 +3,8 @@
   <a class="item"
      *ngFor="let f of softwareFiles"
      [ngClass]="selection?.category == 'software' && selection?.file == f ? 'active' : ''"
-     (click)="fileClicked('software', f)">
+     (click)="fileClicked('software', f)"
+     (contextmenu)="showContextMenu('software', f)">
     <i class="file code outline blue icon left"></i>
     {{f}}
   </a>
@@ -13,7 +14,8 @@
   <a class="item"
      *ngFor="let f of hardwareFiles"
      [ngClass]="selection?.category == 'hardware' && selection?.file == f ? 'active' : ''"
-     (click)="fileClicked('hardware', f)">
+     (click)="fileClicked('hardware', f)"
+     (contextmenu)="showContextMenu('hardware', f)">
     <i class="file code outline pink icon left"></i>
     {{f}}
   </a>
@@ -23,8 +25,21 @@
   <a class="item"
      *ngFor="let f of dataFiles"
      [ngClass]="selection?.category == 'data' && selection?.file == f ? 'active' : ''"
-     (click)="fileClicked('data', f)">
+     (click)="fileClicked('data', f)"
+     (contextmenu)="showContextMenu('data', f)">
     <i class="icon left" [ngClass]="iconFromPath(f)"></i>
     {{f}}
   </a>
 </div>
+
+
+<!-- Modals -->
+
+<app-rename-file-modal
+  [open]="openModal_rename"
+  (close)="openModal_rename = false"
+  modalTitle="Rename file"
+  [dirname]="renameModal_dirname"
+  [filename]="renameModal_placeholder"
+  (createProject)="renameFileResult($event)">
+</app-rename-file-modal>

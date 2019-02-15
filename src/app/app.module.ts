@@ -11,6 +11,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { RecentProjectsComponent } from './components/recent-projects/recent-projects.component';
 import { GettingStartedPageComponent } from './components/getting-started-page/getting-started-page.component';
 import { NewProjectModalComponent } from './modals/new-project-modal/new-project-modal.component';
+import { RenameFileModalComponent } from './modals/rename-file-modal/rename-file-modal.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NewProjectModalComponent } from './modals/new-project-modal/new-project
     SidebarComponent,
     RecentProjectsComponent,
     GettingStartedPageComponent,
-    NewProjectModalComponent
+    NewProjectModalComponent,
+    RenameFileModalComponent
   ],
   imports: [
     BrowserModule,
