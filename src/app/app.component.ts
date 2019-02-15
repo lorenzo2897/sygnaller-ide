@@ -30,7 +30,17 @@ export class AppComponent {
   }
 
   openProject() {
-    Project.load(this.electron,'');
+    this.electron.remote.dialog.showOpenDialog(
+      this.electron.remote.getCurrentWindow(),
+      {
+        properties: ['openDirectory']
+      },
+      dirs => {
+        if (dirs && dirs.length > 0) {
+          Project.load(this.electron,dirs[0]);
+        }
+      }
+    )
   }
 
   onDrop(event) {
