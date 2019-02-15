@@ -1,7 +1,7 @@
 <h3 class="ui">Recent projects</h3>
 <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
   <a class="item" *ngFor="let project of recentProjects" (click)="openProject(project.path)">
-    <h4 class="ui header">
+    <h4 class="ui header" [ngClass]="darkTheme ? 'inverted' : ''">
       {{project.name}}
     </h4>
     <p>{{project.path}}</p>

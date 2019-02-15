@@ -1,6 +1,7 @@
 import {Component, NgZone} from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import {Project} from './classes/Project';
+import {Workspace} from './classes/Workspace';
 
 
 @Component({
@@ -12,7 +13,7 @@ export class AppComponent {
   title = 'sygnaller';
   fdata = 'File drop test';
 
-  darkTheme = false;
+  darkTheme = Workspace.darkMode;
   project: Project = null;
   editorFilename = 'untitled.py';
   editorContents = 'test';
@@ -56,6 +57,13 @@ export class AppComponent {
   projectLoadError(error) {
     this.electron.remote.dialog.showErrorBox('Cannot load project', error.toString())
   }
+
+  setDarkMode(dark: boolean) {
+    Workspace.darkMode = dark;
+    this.darkTheme = dark;
+  }
+
+  // ***************************************
 
   onDrop(event) {
       event.preventDefault();
