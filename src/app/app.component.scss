@@ -20,6 +20,10 @@
   display: flex;
   flex: 1;
 }
+.main.dark {
+  background: #272823;
+  color: rgba(255, 255, 255, 0.8);
+}
 
 .sidebar {
   width: 260px;

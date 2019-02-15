@@ -1,20 +1,29 @@
 <h4 class="ui">Software files</h4>
 <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
-  <a class="item" *ngFor="let f of softwareFiles">
+  <a class="item"
+     *ngFor="let f of softwareFiles"
+     [ngClass]="selection?.category == 'software' && selection?.file == f ? 'active' : ''"
+     (click)="fileClicked('software', f)">
     <i class="file code outline blue icon left"></i>
     {{f}}
   </a>
 </div>
 <h4 class="ui">Hardware files</h4>
 <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
-  <a class="item" *ngFor="let f of hardwareFiles">
+  <a class="item"
+     *ngFor="let f of hardwareFiles"
+     [ngClass]="selection?.category == 'hardware' && selection?.file == f ? 'active' : ''"
+     (click)="fileClicked('hardware', f)">
     <i class="file code outline pink icon left"></i>
     {{f}}
   </a>
 </div>
 <h4 class="ui">Data files</h4>
 <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
-  <a class="item" *ngFor="let f of dataFiles">
+  <a class="item"
+     *ngFor="let f of dataFiles"
+     [ngClass]="selection?.category == 'data' && selection?.file == f ? 'active' : ''"
+     (click)="fileClicked('data', f)">
     <i class="icon left" [ngClass]="iconFromPath(f)"></i>
     {{f}}
   </a>

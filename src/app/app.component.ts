@@ -3,6 +3,7 @@ import { ElectronService } from 'ngx-electron';
 import {Project} from './classes/Project';
 import {Workspace} from './classes/Workspace';
 import {Title} from '@angular/platform-browser';
+import {SidebarSelection} from './components/sidebar/sidebar.component';
 
 
 @Component({
@@ -15,8 +16,10 @@ export class AppComponent {
 
   darkTheme = Workspace.darkMode;
   project: Project = null;
-  editorFilename = 'untitled.py';
-  editorContents = 'test';
+  activeSelection: SidebarSelection = null;
+
+  editorFilename: string = null;
+  editorContents: string = '';
 
   openModal_newProject = false;
 
@@ -69,25 +72,35 @@ export class AppComponent {
     this.darkTheme = dark;
   }
 
-  // ***************************************
+  selectionChanged(selection: SidebarSelection) {
+    if (!selection) return;
+    console.log('Selection changed:', selection.category, '/', selection.file);
 
-  onDrop(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      
-      for (let f of event.dataTransfer.files) {
-        console.log('File you dragged here: ', f.path);
-        if (f.path.endsWith('.txt')) {
-          this.electron.remote.require('fs').readFile(f.path, 'utf-8', (err, data) => this.ngZone.run(() => {
-            if(!err) this.fdata = data;
-        }));
-        }
+    let isText = (s: SidebarSelection) => {
+      if (s.category == 'software') return true;
+      if (s.category == 'hardware') return true;
+
+      let allowedExtensions = ['txt', 'csv', 'py', 'v', 'md'];
+      for(let ext of allowedExtensions) {
+        if (s.file.toLowerCase().endsWith('.' + ext)) return true;
       }
-  }
+    };
 
-  onDragOver(event) {
-      event.stopPropagation();
-      event.preventDefault();
+    if (isText(selection)) {
+      // read file into editor
+      this.editorFilename = this.electron.remote.require('path').join(selection.category, selection.file);
+      let fullPath = this.electron.remote.require('path').resolve(this.project.path, selection.category, selection.file);
+      this.electron.remote.require('fs').readFile(fullPath, 'utf-8', (err, data) => this.ngZone.run(() => {
+        if (!err) {
+          this.editorContents = data;
+        } else {
+          this.editorContents = '';
+        }
+      }));
+    } else {
+      // hide the editor
+      this.editorFilename = null;
+    }
   }
 
 }

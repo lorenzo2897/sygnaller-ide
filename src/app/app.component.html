@@ -28,14 +28,6 @@
 
     <div class="item">
       <div class="ui buttons">
-        <button class="ui button" (click)="editorFilename = 'untitled.py'">Python</button>
-        <button class="ui button" (click)="editorFilename = 'untitled.v'">Verilog</button>
-        <button class="ui button" (click)="editorFilename = 'untitled.txt'">Text</button>
-      </div>
-    </div>
-
-    <div class="item">
-      <div class="ui buttons">
         <button class="ui button" (click)="setDarkMode(false)">Light</button>
         <button class="ui button" (click)="setDarkMode(true)">Dark</button>
       </div>
@@ -47,7 +39,7 @@
   </div>
 </div>
 
-<div class="main">
+<div class="main" [ngClass]="darkTheme ? 'dark' : ''">
   <div class="sidebar" [ngClass]="darkTheme ? 'dark' : ''">
 
     <app-recent-projects
@@ -59,16 +51,10 @@
     <app-sidebar
       *ngIf="project != null"
       [project]="project"
+      [(selection)]="activeSelection"
+      (selectionChange)="selectionChanged($event)"
       [darkTheme]="darkTheme">
     </app-sidebar>
-
-
-    <div
-      style="margin-top: 100px; padding-bottom: 8px; color: #ddd;"
-      (drop)="onDrop($event)"
-      (dragover)="onDragOver($event)">
-      {{fdata}}
-    </div>
   </div>
 
   <app-getting-started-page
@@ -78,7 +64,7 @@
   </app-getting-started-page>
 
   <app-code-editor
-    *ngIf="project != null"
+    *ngIf="project != null && editorFilename != null"
     class="main-content"
     [contents]="editorContents"
     [darkTheme]="darkTheme"

@@ -3,3 +3,7 @@ a.item {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+a.item.active {
+  font-weight: bold !important;
+}

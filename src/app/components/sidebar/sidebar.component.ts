@@ -1,6 +1,11 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Input} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Project} from '../../classes/Project';
 import {ElectronService} from 'ngx-electron';
+
+export interface SidebarSelection {
+  category: string,
+  file: string
+}
 
 @Component({
   selector: 'app-sidebar',
@@ -10,6 +15,9 @@ import {ElectronService} from 'ngx-electron';
 export class SidebarComponent implements AfterViewInit {
   @Input() darkTheme: boolean = false;
   @Input() project: Project = null;
+
+  @Input() selection: SidebarSelection = null;
+  @Output() selectionChange: EventEmitter<SidebarSelection> = new EventEmitter<SidebarSelection>();
 
   softwareFiles: string[] = [];
   hardwareFiles: string[] = [];
@@ -67,4 +75,8 @@ export class SidebarComponent implements AfterViewInit {
     return 'file outline';
   }
 
+  fileClicked(category: string, path: string) {
+    this.selection = {category: category, file: path};
+    this.selectionChange.emit(this.selection);
+  }
 }
