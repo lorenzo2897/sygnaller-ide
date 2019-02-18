@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-code-editor',
@@ -14,13 +14,23 @@ export class CodeEditorComponent implements AfterViewInit {
   set filename(val: string) {
     this._filename = val;
     this.title = val;
+
+    let newOptions = JSON.parse(JSON.stringify(this.editorOptions));
+
     if (val.toLowerCase().endsWith('.py')) {
       this.editorMode = 'python';
+      newOptions.enableBasicAutocompletion = true;
+      newOptions.enableLiveAutocompletion = true;
     } else if (val.toLowerCase().endsWith('.v')) {
       this.editorMode = 'verilog';
+      newOptions.enableBasicAutocompletion = true;
+      newOptions.enableLiveAutocompletion = true;
     } else {
       this.editorMode = 'text';
+      newOptions.enableBasicAutocompletion = false;
+      newOptions.enableLiveAutocompletion = false;
     }
+    this.editorOptions = newOptions;
     this.editor.getEditor().focus();
     this.editor.getEditor().selection.moveTo(0, 0);
   }
@@ -37,7 +47,7 @@ export class CodeEditorComponent implements AfterViewInit {
 
   @ViewChild('editor') editor;
 
-  editorMode: string = 'python';
+  editorMode: string = 'text';
   editorTheme: string = 'chrome';
   editorOptions = {
     printMargin: false,

@@ -146,7 +146,6 @@ export class AppComponent {
 
   newFile(filename: string) {
     let fullPath = this.electron.remote.require('path').resolve(this.newFileModal_dirname, filename);
-    console.log('Creating file', fullPath);
     this.electron.remote.require('fs').writeFileSync(fullPath, '', 'utf-8');
   }
 
