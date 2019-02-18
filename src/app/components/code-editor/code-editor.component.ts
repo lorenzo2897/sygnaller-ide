@@ -66,7 +66,24 @@ export class CodeEditorComponent implements AfterViewInit {
       exec: function (editor) {
 
       }
-    })
+    });
+
+    // this.editor.getEditor().on('guttermousedown', e => {
+    //   console.log(e);
+    //   let target = e.domEvent.target;
+    //
+    //   if (target.className.indexOf("ace_gutter-cell") == -1)
+    //     return;
+    //   if (!this.editor.getEditor().isFocused())
+    //     return;
+    //   if (e.clientX > 25 + target.getBoundingClientRect().left)
+    //     return;
+    //
+    //   let row = e.getDocumentPosition().row;
+    //   e.editor.session.setBreakpoint(row);
+    //   e.stop()
+    // })
+
   }
 
   textChanged() {
