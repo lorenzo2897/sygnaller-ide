@@ -53,6 +53,10 @@ export class AppComponent {
 
   projectLoaded(project: Project) {
     this.ngZone.run(() => {
+      this.activeSelection = null;
+      this.editorFilename = null;
+      this.editorOriginalContents = '';
+      this.editorContents = '';
       this.project = project;
       this.titleService.setTitle(project.name + ' - Sygnaller');
     });
