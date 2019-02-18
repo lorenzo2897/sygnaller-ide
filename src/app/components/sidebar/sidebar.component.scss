@@ -7,3 +7,8 @@ a.item {
 a.item.active {
   font-weight: bold !important;
 }
+
+h4 {
+  cursor: default;
+  user-select: none;
+}

@@ -16,8 +16,22 @@
   <div class="ui secondary menu" *ngIf="project != null">
     <div class="item">
       <div class="ui buttons">
-        <button class="ui button">
+        <button class="ui button pointing dropdown" suiDropdown>
           <i class="plus icon"></i>New file
+          <div class="menu" suiDropdownMenu>
+            <div class="item" (click)="newFileWizard('software')">
+              <i class="code blue icon left"></i>
+              Software file
+            </div>
+            <div class="item" (click)="newFileWizard('hardware')">
+              <i class="code pink icon left"></i>
+              Hardware file
+            </div>
+            <div class="item" (click)="newFileWizard('data')">
+              <i class="file alternate outline grey icon left"></i>
+              Data file
+            </div>
+          </div>
         </button>
         <div class="or"></div>
         <button class="ui button">
@@ -84,3 +98,13 @@
   (close)="openModal_newProject = false"
   (createProject)="createProject($event)">
 </app-new-project-modal>
+
+<app-rename-file-modal
+  [open]="openModal_newFile"
+  (close)="openModal_newFile = false"
+  [modalTitle]="'New ' + newFileModal_category + ' file'"
+  modalAction="Create"
+  [dirname]="newFileModal_dirname"
+  [filename]="newFileModal_placeholder"
+  (renameFile)="newFile($event)">
+</app-rename-file-modal>

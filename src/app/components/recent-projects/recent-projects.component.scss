@@ -13,3 +13,8 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+h3 {
+  cursor: default;
+  user-select: none;
+}

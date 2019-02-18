@@ -9,6 +9,7 @@ import {ElectronService} from 'ngx-electron';
 export class RenameFileModalComponent {
 
   @Input() modalTitle: string = 'Rename file';
+  @Input() modalAction: string = 'Rename';
 
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
   @Output() renameFile: EventEmitter<any> = new EventEmitter<any>();

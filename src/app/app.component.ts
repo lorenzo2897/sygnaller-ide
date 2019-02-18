@@ -22,6 +22,11 @@ export class AppComponent {
   editorContents: string = '';
 
   openModal_newProject = false;
+  openModal_newFile = false;
+
+  newFileModal_dirname = null;
+  newFileModal_category = null;
+  newFileModal_placeholder = null;
 
   constructor(private electron: ElectronService, private ngZone: NgZone, private titleService: Title) {}
 
@@ -129,6 +134,20 @@ export class AppComponent {
   @HostListener('window:beforeunload')
   doSomething() {
     return this.saveFile();
+  }
+
+  newFileWizard(category: string) {
+    this.newFileModal_placeholder = ' ';
+    setTimeout(() => this.newFileModal_placeholder = '', 0);
+    this.newFileModal_category = category;
+    this.newFileModal_dirname = this.electron.remote.require('path').join(this.project.path, category);
+    this.openModal_newFile = true;
+  }
+
+  newFile(filename: string) {
+    let fullPath = this.electron.remote.require('path').resolve(this.newFileModal_dirname, filename);
+    console.log('Creating file', fullPath);
+    this.electron.remote.require('fs').writeFileSync(fullPath, '', 'utf-8');
   }
 
 }
