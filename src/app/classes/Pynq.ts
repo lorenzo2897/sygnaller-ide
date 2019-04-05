@@ -79,7 +79,7 @@ export class Pynq {
   }
 
   async periodicConnectionCheck() {
-    if (this.connectionStatus == ConnectionStatus.DISCONNECTED) {
+    if (this.connectionStatus != ConnectionStatus.CONNECTED) {
       clearInterval(this.periodicCheckHandle);
       this.periodicCheckHandle = null;
     }

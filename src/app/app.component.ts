@@ -101,7 +101,12 @@ export class AppComponent {
   }
 
   selectionChanged(selection: SidebarSelection) {
-    if (!selection) return;
+    if (!selection) {
+      this.editorFilename = null;
+      this.editorOriginalContents = '';
+      this.editorContents = '';
+      return;
+    }
 
     if (!this.saveFile()) return; // ensure we save before moving away!
     console.log('Selection changed:', selection.category, '/', selection.file);
@@ -174,6 +179,52 @@ export class AppComponent {
     this.ngZone.run(() => {
       this.electron.remote.require('fs').writeFileSync(fullPath, '', 'utf-8');
     });
+  }
+
+  importFileWizard(category: string) {
+    let ext;
+    if (category == 'software') {
+      ext = [{
+        name: 'Python Files',
+        extensions: ['py']
+      }];
+    } else if (category == 'hardware') {
+      ext = [{
+        name: 'Verilog Files',
+        extensions: ['v']
+      }];
+    } else {
+      ext = [];
+    }
+    this.electron.remote.dialog.showOpenDialog(
+      this.electron.remote.getCurrentWindow(),
+      {
+        filters: ext
+      },
+      files => {
+        if (files && files.length > 0) {
+          for (let oldPath of files) {
+            let baseName = this.electron.remote.require('path').basename(oldPath);
+            let newPath = this.electron.remote.require('path').resolve(this.project.path, category, baseName);
+
+            // automatically avoid duplicates
+            if (this.electron.remote.require('fs').existsSync(newPath)) {
+              let prefix = newPath;
+              let suffix = 1;
+              while (this.electron.remote.require('fs').existsSync(newPath)) {
+                newPath = `${prefix}-${suffix++}`;
+              }
+            }
+
+            // perform file copy
+            this.electron.remote.require('fs').copyFile(oldPath, newPath, err => {
+              if (err)
+                this.ngZone.run(() => this.alert('Import failed', err));
+            });
+          }
+        }
+      }
+    )
   }
 
   newConnectionWizard() {

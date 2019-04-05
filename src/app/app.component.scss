@@ -45,6 +45,7 @@
 .status-bar {
   background: $color-toolbar-light;
   padding: 2px 8px;
+  user-select: none;
 }
 .dark.status-bar {
   background: $color-toolbar-dark;

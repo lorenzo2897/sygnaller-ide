@@ -37,8 +37,22 @@
               </div>
             </button>
             <div class="or"></div>
-            <button class="ui button">
+            <button class="ui button pointing dropdown" suiDropdown>
               <i class="folder open icon"></i>Import file
+              <div class="menu" suiDropdownMenu>
+                <div class="item" (click)="importFileWizard('software')">
+                  <i class="code blue icon left"></i>
+                  Software file
+                </div>
+                <div class="item" (click)="importFileWizard('hardware')">
+                  <i class="code pink icon left"></i>
+                  Hardware file
+                </div>
+                <div class="item" (click)="importFileWizard('data')">
+                  <i class="file alternate outline grey icon left"></i>
+                  Data file
+                </div>
+              </div>
             </button>
           </div>
         </div>
@@ -134,7 +148,7 @@
 </div>
 
 <div class="status-bar" [ngClass]="darkTheme ? 'dark' : ''">
-  Status bar
+  &nbsp;
 </div>
 
 
