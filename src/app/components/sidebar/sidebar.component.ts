@@ -135,12 +135,14 @@ export class SidebarComponent implements AfterViewInit {
   }
 
   deleteFileConfirmed() {
-    let selected = this.electron.remote.require('path').resolve(this.project.path, this.selection.category, this.selection.file);
+    if (this.selection) {
+      let selected = this.electron.remote.require('path').resolve(this.project.path, this.selection.category, this.selection.file);
 
-    // de-select the file if it is currently selected
-    if (this.deleteModal_fullPath == selected) {
-      this.selection = null;
-      this.selectionChange.emit(this.selection);
+      // de-select the file if it is currently selected
+      if (this.deleteModal_fullPath == selected) {
+        this.selection = null;
+        this.selectionChange.emit(this.selection);
+      }
     }
 
     this.electron.remote.require('fs').unlinkSync(this.deleteModal_fullPath);
