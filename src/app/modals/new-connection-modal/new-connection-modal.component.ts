@@ -55,7 +55,7 @@ export class NewConnectionModalComponent {
 
     // fire event
     this.connect.emit({
-      mac: (this.connectionMode == 'mac' ? strippedMac : null),
+      mac: (this.connectionMode == 'mac' ? strippedMac.toUpperCase() : null),
       ip: (this.connectionMode == 'ip' ? this.ip : null)
     });
   }

@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { NgxElectronModule } from 'ngx-electron';
 import {SuiModule} from 'ng2-semantic-ui';
@@ -30,6 +31,7 @@ import { NewConnectionModalComponent } from './modals/new-connection-modal/new-c
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     NgxElectronModule,
     SuiModule,
     AceEditorModule
