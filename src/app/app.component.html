@@ -60,7 +60,7 @@
       <div class="ui secondary menu">
         <div class="item">
           <div class="ui buttons">
-            <button class="ui button pointing dropdown" suiDropdown *ngIf="!pynq.isConnected">
+            <button class="ui button pointing dropdown" suiDropdown *ngIf="pynq.connectionStatus == StatusType.DISCONNECTED">
               <i class="plug icon"></i>Connect to Pynq
               <div class="menu" suiDropdownMenu>
                 <div class="item" (click)="newConnectionWizard()">
@@ -73,7 +73,7 @@
                 </div>
               </div>
             </button>
-            <button class="ui button pointing dropdown" suiDropdown *ngIf="pynq.isConnected">
+            <button class="ui button pointing dropdown" suiDropdown *ngIf="pynq.connectionStatus == StatusType.CONNECTED">
               <i class="green plug icon"></i>Connected to Pynq
               <div class="menu" suiDropdownMenu>
                 <div class="item disabled"><i class="at grey icon left"></i> {{pynq.connectedMac}}</div>
@@ -84,10 +84,13 @@
                 </div>
               </div>
             </button>
-            <button class="ui button" *ngIf="pynq.isConnected">
+            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTING">
+              <i class="yellow plug icon"></i>Connecting...
+            </button>
+            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED">
               <i class="wrench icon"></i>Build
             </button>
-            <button class="ui button" *ngIf="pynq.isConnected">
+            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED">
               <i class="play icon"></i>Run
             </button>
           </div>

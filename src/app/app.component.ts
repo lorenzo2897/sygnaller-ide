@@ -4,7 +4,7 @@ import {Project} from './classes/Project';
 import {Workspace} from './classes/Workspace';
 import {Title} from '@angular/platform-browser';
 import {SidebarSelection} from './components/sidebar/sidebar.component';
-import {Pynq} from './classes/Pynq';
+import {Pynq, ConnectionStatus} from './classes/Pynq';
 import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-ui';
 
 
@@ -14,6 +14,7 @@ import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  StatusType = ConnectionStatus;
 
   darkTheme = Workspace.darkMode;
   project: Project = null;
@@ -85,7 +86,7 @@ export class AppComponent {
   }
 
   projectLoadError(error) {
-    this.electron.remote.dialog.showErrorBox('Cannot load project', error.toString())
+    this.alert('Cannot load project', error.toString());
   }
 
   closeProject() {
@@ -137,6 +138,7 @@ export class AppComponent {
   }
 
   saveFile() {
+    // return whether saving was successful
     if (!this.editorFilename || this.editorContents === this.editorOriginalContents) return true;
     let fullPath = this.electron.remote.require('path').resolve(this.project.path, this.editorFilename);
     try {
