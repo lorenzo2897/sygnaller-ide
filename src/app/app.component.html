@@ -13,42 +13,86 @@
       </div>
     </div>
   </div>
-  <div class="ui secondary menu" *ngIf="project != null">
-    <div class="item">
-      <div class="ui buttons">
-        <button class="ui button pointing dropdown" suiDropdown>
-          <i class="plus icon"></i>New file
-          <div class="menu" suiDropdownMenu>
-            <div class="item" (click)="newFileWizard('software')">
-              <i class="code blue icon left"></i>
-              Software file
-            </div>
-            <div class="item" (click)="newFileWizard('hardware')">
-              <i class="code pink icon left"></i>
-              Hardware file
-            </div>
-            <div class="item" (click)="newFileWizard('data')">
-              <i class="file alternate outline grey icon left"></i>
-              Data file
-            </div>
+
+  <div *ngIf="project != null" style="display: flex;">
+    <div> <!-- required to position menu correctly -->
+      <div class="ui secondary menu">
+        <div class="item">
+          <div class="ui buttons">
+            <button class="ui button pointing dropdown" suiDropdown>
+              <i class="plus icon"></i>New file
+              <div class="menu" suiDropdownMenu>
+                <div class="item" (click)="newFileWizard('software')">
+                  <i class="code blue icon left"></i>
+                  Software file
+                </div>
+                <div class="item" (click)="newFileWizard('hardware')">
+                  <i class="code pink icon left"></i>
+                  Hardware file
+                </div>
+                <div class="item" (click)="newFileWizard('data')">
+                  <i class="file alternate outline grey icon left"></i>
+                  Data file
+                </div>
+              </div>
+            </button>
+            <div class="or"></div>
+            <button class="ui button">
+              <i class="folder open icon"></i>Import file
+            </button>
           </div>
-        </button>
-        <div class="or"></div>
-        <button class="ui button">
-          <i class="folder open icon"></i>Import file
-        </button>
+        </div>
+
+        <div class="item">
+          <div class="ui buttons">
+            <button class="ui button" (click)="setDarkMode(false)">Light</button>
+            <button class="ui button" (click)="setDarkMode(true)">Dark</button>
+          </div>
+        </div>
+
+        <div class="item">
+          <button class="ui button" (click)="closeProject()">Close project</button>
+        </div>
       </div>
     </div>
 
-    <div class="item">
-      <div class="ui buttons">
-        <button class="ui button" (click)="setDarkMode(false)">Light</button>
-        <button class="ui button" (click)="setDarkMode(true)">Dark</button>
+    <div style="margin-left: auto">
+      <div class="ui secondary menu">
+        <div class="item">
+          <div class="ui buttons">
+            <button class="ui button pointing dropdown" suiDropdown *ngIf="!pynq.isConnected">
+              <i class="plug icon"></i>Connect to Pynq
+              <div class="menu" suiDropdownMenu>
+                <div class="item" (click)="newConnectionWizard()">
+                  <i class="asterisk pink icon left"></i>
+                  New connection
+                </div>
+                <div class="header" *ngIf="pynq.recentConnections.length > 0">Recently connected</div>
+                <div class="item" (click)="connectPynq(c.mac, c.ip)" *ngFor="let c of pynq.recentConnections">
+                  {{c.mac == null ? c.ip : c.mac}}
+                </div>
+              </div>
+            </button>
+            <button class="ui button pointing dropdown" suiDropdown *ngIf="pynq.isConnected">
+              <i class="green plug icon"></i>Connected to Pynq
+              <div class="menu" suiDropdownMenu>
+                <div class="item disabled"><i class="at grey icon left"></i> {{pynq.connectedMac}}</div>
+                <div class="item disabled"><i class="sitemap grey icon left"></i> {{pynq.connectedIp}}</div>
+                <div class="item" (click)="disconnectPynq()">
+                  <i class="unlink grey icon left"></i>
+                  Disconnect
+                </div>
+              </div>
+            </button>
+            <button class="ui button" *ngIf="pynq.isConnected">
+              <i class="wrench icon"></i>Build
+            </button>
+            <button class="ui button" *ngIf="pynq.isConnected">
+              <i class="play icon"></i>Run
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="item">
-      <button class="ui button" (click)="closeProject()">Close project</button>
     </div>
   </div>
 </div>
@@ -93,6 +137,16 @@
 
 <!-- Modals -->
 
+<ng-template let-context let-modal="modal" #simpleAlertModal>
+  <div class="header">{{ context.title }}</div>
+  <div class="content">
+    <p>{{ context.message }}</p>
+  </div>
+  <div class="actions">
+    <button class="ui basic green button" (click)="modal.approve()" autofocus>OK</button>
+  </div>
+</ng-template>
+
 <app-new-project-modal
   [open]="openModal_newProject"
   (close)="openModal_newProject = false"
@@ -108,3 +162,9 @@
   [filename]="newFileModal_placeholder"
   (renameFile)="newFile($event)">
 </app-rename-file-modal>
+
+<app-new-connection-modal
+  [open]="openModal_newConnection"
+  (close)="openModal_newConnection = false"
+  (connect)="connectPynq($event.mac, $event.ip)">
+</app-new-connection-modal>

@@ -1,9 +1,11 @@
-import {Component, HostListener, NgZone} from '@angular/core';
+import {Component, HostListener, NgZone, ViewChild} from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import {Project} from './classes/Project';
 import {Workspace} from './classes/Workspace';
 import {Title} from '@angular/platform-browser';
 import {SidebarSelection} from './components/sidebar/sidebar.component';
+import {Pynq} from './classes/Pynq';
+import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-ui';
 
 
 @Component({
@@ -23,12 +25,27 @@ export class AppComponent {
 
   openModal_newProject = false;
   openModal_newFile = false;
+  openModal_newConnection = false;
 
   newFileModal_dirname = null;
   newFileModal_category = null;
   newFileModal_placeholder = null;
 
-  constructor(private electron: ElectronService, private ngZone: NgZone, private titleService: Title) {}
+  @ViewChild('simpleAlertModal')
+  public simpleAlertModal:ModalTemplate<any, void, void>;
+
+
+  constructor(private electron: ElectronService,
+              private ngZone: NgZone,
+              private titleService: Title,
+              private modalService: SuiModalService,
+              private pynq: Pynq) {}
+
+  alert(title: string, message: string) {
+    const config = new TemplateModalConfig(this.simpleAlertModal);
+    config.context = {title: title, message: message};
+    this.modalService.open(config);
+  }
 
   openProjectWizard() {
     this.openModal_newProject = true;
@@ -132,7 +149,7 @@ export class AppComponent {
   }
 
   @HostListener('window:beforeunload')
-  doSomething() {
+  beforeClosing() {
     return this.saveFile();
   }
 
@@ -145,8 +162,33 @@ export class AppComponent {
   }
 
   newFile(filename: string) {
+    if (this.newFileModal_category == 'software') {
+      if (!filename.toLowerCase().endsWith('.py')) {
+        filename += '.py';
+      }
+    }
+
     let fullPath = this.electron.remote.require('path').resolve(this.newFileModal_dirname, filename);
-    this.electron.remote.require('fs').writeFileSync(fullPath, '', 'utf-8');
+    this.ngZone.run(() => {
+      this.electron.remote.require('fs').writeFileSync(fullPath, '', 'utf-8');
+    });
+  }
+
+  newConnectionWizard() {
+    this.openModal_newConnection = true;
+  }
+
+  connectPynq(mac: string, ip: string) {
+    this.pynq.connect(mac, ip)
+      .catch(err => {
+        if (err) {
+          this.alert('Connection failed', err);
+        }
+      });
+  }
+
+  disconnectPynq() {
+    this.pynq.disconnect();
   }
 
 }

@@ -1,0 +1,41 @@
+<sui-modal *ngIf="_open" [isClosable]="true" transitionDuration="200" (dismissed)="close.emit()" #modal>
+  <div class="header">New connection</div>
+  <div class="content">
+    <div class="ui form">
+      <div class="grouped fields">
+        <div class="field">
+          <sui-radio-button name="example" value="mac" [(ngModel)]="connectionMode">Connect via MAC address</sui-radio-button>
+        </div>
+        <div class="ui fluid input" [ngClass]="connectionMode == 'mac' ? '' : 'disabled'" (click)="connectionMode = 'mac'; macField.focus()">
+          <input #macField
+                 autofocus
+                 type="text"
+                 placeholder="MAC address"
+                 [(ngModel)]="mac">
+        </div>
+        <div class="ui pointing red basic label" *ngIf="error == 1">
+          Please enter a valid MAC address (e.g. 00:11:22:33:44:55)
+        </div>
+
+        <br>
+
+        <div class="field">
+          <sui-radio-button name="example" value="ip" [(ngModel)]="connectionMode">Connect via IP address</sui-radio-button>
+        </div>
+        <div class="ui fluid input" [ngClass]="connectionMode == 'ip' ? '' : 'disabled'" (click)="connectionMode = 'ip'; ipField.focus()">
+          <input #ipField
+                 type="text"
+                 placeholder="IP address"
+                 [(ngModel)]="ip">
+        </div>
+        <div class="ui pointing red basic label" *ngIf="error == 2">
+          Plese enter a valid IP address (e.g. 100.100.100.100)
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="ui basic button" (click)="modal.deny()">Cancel</button>
+    <button class="ui pink basic button" (click)="approved(modal)" autofocus>Connect</button>
+  </div>
+</sui-modal>

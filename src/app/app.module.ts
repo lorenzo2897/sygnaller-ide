@@ -13,6 +13,7 @@ import { GettingStartedPageComponent } from './components/getting-started-page/g
 import { NewProjectModalComponent } from './modals/new-project-modal/new-project-modal.component';
 import { RenameFileModalComponent } from './modals/rename-file-modal/rename-file-modal.component';
 import { DeleteFileModalComponent } from './modals/delete-file-modal/delete-file-modal.component';
+import { NewConnectionModalComponent } from './modals/new-connection-modal/new-connection-modal.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { DeleteFileModalComponent } from './modals/delete-file-modal/delete-file
     GettingStartedPageComponent,
     NewProjectModalComponent,
     RenameFileModalComponent,
-    DeleteFileModalComponent
+    DeleteFileModalComponent,
+    NewConnectionModalComponent
   ],
   imports: [
     BrowserModule,
