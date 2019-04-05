@@ -208,13 +208,7 @@ export class AppComponent {
             let newPath = this.electron.remote.require('path').resolve(this.project.path, category, baseName);
 
             // automatically avoid duplicates
-            if (this.electron.remote.require('fs').existsSync(newPath)) {
-              let prefix = newPath;
-              let suffix = 1;
-              while (this.electron.remote.require('fs').existsSync(newPath)) {
-                newPath = `${prefix}-${suffix++}`;
-              }
-            }
+            newPath = Project.findUnconflictingName(this.electron, newPath);
 
             // perform file copy
             this.electron.remote.require('fs').copyFile(oldPath, newPath, err => {

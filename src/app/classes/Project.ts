@@ -152,4 +152,20 @@ export class Project {
     else
       return [];
   }
+
+  static findUnconflictingName(electron: ElectronService, filename: string) : string {
+    if (!electron.remote.require('fs').existsSync(filename)) {
+      return filename;
+    }
+
+    let extension = electron.remote.require('path').extname(filename);
+    let prefix = filename.substring(0, filename.length - extension.length);
+    let suffix = 1;
+
+    while (electron.remote.require('fs').existsSync(filename)) {
+      filename = `${prefix}-${suffix++}${extension}`;
+    }
+
+    return filename;
+  }
 }
