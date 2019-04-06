@@ -17,6 +17,7 @@ export class TerminalComponent {
   cachedCommand: string = '';
   historyLevel: number = 0;
 
+  stdin: string = '';
   stdout: string[] = [];
   stderr: string[] = [];
   remoteTerminalJob = null;
@@ -37,6 +38,7 @@ export class TerminalComponent {
 
   @Input() set running(value: boolean) {
     if (value == true) {
+      this.stdin = '';
       this.stdout = ['Python program started.'];
       this.stderr = [];
       clearTimeout(this.remoteTerminalJob);
@@ -46,11 +48,14 @@ export class TerminalComponent {
 
   commandLineKey(event: KeyboardEvent) {
     if (event.code == 'Enter') {
-      this.historyLevel = 0;
-      this.cachedCommand = '';
-      this.commandHistory.push((<any>event.target).value);
-      this.addOutput((<any>event.target).value + '\n');
-      (<any>event.target).value = '';
+      if (this.pynq.isRunning) {
+        this.historyLevel = 0;
+        this.cachedCommand = '';
+        this.commandHistory.push((<any>event.target).value);
+        this.addOutput('>>> ' + (<any>event.target).value + '\n');
+        this.stdin += (<any>event.target).value + '\n';
+        (<any>event.target).value = '';
+      }
     }
 
     else if (event.code == 'ArrowUp') {
@@ -96,7 +101,9 @@ export class TerminalComponent {
     if (this.pynq.connectionStatus != ConnectionStatus.CONNECTED) return;
 
     try {
-      let response = await this.pynq.terminal();
+      let input = this.stdin == '' ? null : this.stdin;
+      this.stdin = '';
+      let response = await this.pynq.terminal(input);
       response.stdout.forEach(line => this.stdout.push(line));
       response.stderr.forEach(line => this.stderr.push(line));
       this.scrollToBottom();

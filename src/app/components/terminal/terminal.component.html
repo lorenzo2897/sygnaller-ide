@@ -3,7 +3,7 @@
   <pre class="output" *ngFor="let line of stdout">{{line}}</pre>
   <pre class="output error" *ngFor="let line of stderr">{{line}}</pre>
   <div id="input-line" class="input-line">
-    <div class="prompt">&gt;</div>
+    <div class="prompt">&gt;&gt;&gt;</div>
     <div><input #cmdline class="cmdline" (keydown)="commandLineKey($event)" /></div>
   </div>
   <div id="vbuffer" (click)="cmdline.focus()"></div>
