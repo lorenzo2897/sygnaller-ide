@@ -155,7 +155,7 @@ export class Pynq {
 
   async pingDevice(ip: string) {
     try {
-      let resp: any = await this.http.post(`http://${ip}:8000/ping`, {}).pipe(timeout(6000)).toPromise();
+      let resp: any = await this.http.get(`http://${ip}:8000/ping`).pipe(timeout(6000)).toPromise();
       if (resp.error) {
         throw resp.error;
       } else {
