@@ -82,7 +82,10 @@
                   New connection
                 </div>
                 <div class="header" *ngIf="pynq.recentConnections.length > 0">Recently connected</div>
-                <div class="item" (click)="connectPynq(c.mac, c.ip)" *ngFor="let c of pynq.recentConnections">
+                <div class="item"
+                     (click)="connectPynq(c.mac, c.ip)"
+                     *ngFor="let c of pynq.recentConnections"
+                     (contextmenu)="pynq.removeFromRecents(c)">
                   {{c.mac == null ? c.ip : c.mac}}
                 </div>
               </div>

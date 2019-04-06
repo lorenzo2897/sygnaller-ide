@@ -90,6 +90,11 @@ export class Pynq {
     }
   }
 
+  removeFromRecents(c: PynqConnection) {
+    this.recentConnections = this.recentConnections.filter(i => i.mac != c.mac || i.ip != c.ip); // remove previous instances of myself
+    localStorage.setItem('recentConnections', JSON.stringify(this.recentConnections));
+  }
+
   async periodicConnectionCheck() {
     if (this.connectionStatus != ConnectionStatus.CONNECTED) {
       return;
