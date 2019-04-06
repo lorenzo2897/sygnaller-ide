@@ -11,6 +11,7 @@ import { CodeEditorComponent } from './components/code-editor/code-editor.compon
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { RecentProjectsComponent } from './components/recent-projects/recent-projects.component';
 import { GettingStartedPageComponent } from './components/getting-started-page/getting-started-page.component';
+import { TerminalComponent } from './components/terminal/terminal.component';
 import { NewProjectModalComponent } from './modals/new-project-modal/new-project-modal.component';
 import { RenameFileModalComponent } from './modals/rename-file-modal/rename-file-modal.component';
 import { DeleteFileModalComponent } from './modals/delete-file-modal/delete-file-modal.component';
@@ -26,7 +27,8 @@ import { NewConnectionModalComponent } from './modals/new-connection-modal/new-c
     NewProjectModalComponent,
     RenameFileModalComponent,
     DeleteFileModalComponent,
-    NewConnectionModalComponent
+    NewConnectionModalComponent,
+    TerminalComponent
   ],
   imports: [
     BrowserModule,

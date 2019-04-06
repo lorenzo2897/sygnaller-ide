@@ -1,0 +1,54 @@
+::selection {
+  background: #ffcef6;
+}
+
+:host {
+  margin: 0;
+  overflow-y: scroll;
+}
+
+#container {
+  width: 100%;
+  padding: .1em 1.5em 1em 1em;
+  font-size: 11pt;
+  font-family: Consolas, Inconsolata, monospace;
+  color: #111;
+  cursor: text;
+}
+
+#container.dark {
+  color: white;
+}
+
+#output {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: Consolas, Inconsolata, monospace;
+}
+
+.input-line {
+  display: flex;
+}
+.input-line > div:nth-child(2) {
+  flex: 1;
+}
+.prompt {
+  white-space: nowrap;
+  color: #96b38a;
+  margin-right: 7px;
+  user-select: none;
+  font-weight: bold;
+}
+.cmdline {
+  outline: none;
+  background-color: transparent;
+  margin: 0;
+  width: 100%;
+  font: inherit;
+  border: none;
+  color: inherit;
+}
+
+#vbuffer {
+  height: 4vh;
+}

@@ -152,6 +152,14 @@
     [darkTheme]="darkTheme"
     [filename]="editorFilename">
   </app-code-editor>
+
+  <app-terminal
+    *ngIf="project != null"
+    class="main-content"
+    [show]="activeSelection?.category == 'tools' && activeSelection?.file == 'terminal'"
+    [pynq]="pynq"
+    [darkTheme]="darkTheme">
+  </app-terminal>
 </div>
 
 <div class="status-bar" [ngClass]="darkTheme ? 'dark' : ''">
