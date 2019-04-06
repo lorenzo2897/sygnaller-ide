@@ -155,9 +155,10 @@
 
   <app-terminal
     *ngIf="project != null"
-    class="main-content"
+    [ngClass]="activeSelection?.category == 'tools' && activeSelection?.file == 'terminal' ? 'main-content' : ''"
     [show]="activeSelection?.category == 'tools' && activeSelection?.file == 'terminal'"
     [pynq]="pynq"
+    [running]="pynq.isRunning"
     [darkTheme]="darkTheme">
   </app-terminal>
 </div>

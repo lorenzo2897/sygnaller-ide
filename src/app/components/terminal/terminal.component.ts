@@ -1,5 +1,5 @@
-import {Component, ElementRef, Input} from '@angular/core';
-import {Pynq} from '../../classes/Pynq';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {ConnectionStatus, Pynq} from '../../classes/Pynq';
 
 @Component({
   selector: 'app-terminal',
@@ -7,6 +7,7 @@ import {Pynq} from '../../classes/Pynq';
   styleUrls: ['./terminal.component.scss']
 })
 export class TerminalComponent {
+  @ViewChild('cmdline') cmdline: ElementRef;
 
   @Input() pynq: Pynq;
   private _show: boolean;
@@ -16,7 +17,9 @@ export class TerminalComponent {
   cachedCommand: string = '';
   historyLevel: number = 0;
 
-  stdout: string = '';
+  stdout: string[] = [];
+  stderr: string[] = [];
+  remoteTerminalJob = null;
 
   constructor(private element: ElementRef) { }
 
@@ -24,6 +27,20 @@ export class TerminalComponent {
     this._show = value;
     if (value == true) {
       this.historyLevel = 0;
+      clearTimeout(this.remoteTerminalJob);
+      this.remoteTerminal();
+      setTimeout(() => this.cmdline.nativeElement.focus(), 0);
+    } else {
+      clearTimeout(this.remoteTerminalJob);
+    }
+  }
+
+  @Input() set running(value: boolean) {
+    if (value == true) {
+      this.stdout = ['Python program started.'];
+      this.stderr = [];
+      clearTimeout(this.remoteTerminalJob);
+      if (this._show) this.remoteTerminal();
     }
   }
 
@@ -44,8 +61,10 @@ export class TerminalComponent {
       if (this.historyLevel < this.commandHistory.length) {
         this.historyLevel++;
       }
-      (<any>event.target).value = this.commandHistory[this.commandHistory.length - this.historyLevel];
-      return false;
+      if (this.historyLevel > 0)
+        (<any>event.target).value = this.commandHistory[this.commandHistory.length - this.historyLevel];
+
+      return false; // prevent propagation of up arrow
     }
 
     else if (event.code == 'ArrowDown') {
@@ -59,9 +78,35 @@ export class TerminalComponent {
     }
   }
 
-  addOutput(text: string) {
-    this.stdout += text;
+  scrollToBottom() {
     setTimeout(() => this.element.nativeElement.scrollTop = this.element.nativeElement.scrollHeight, 0);
+  }
+
+  addOutput(text: string) {
+    this.stdout.push(text);
+    this.scrollToBottom();
+  }
+
+  addError(text: string) {
+    this.stderr.push(text);
+    this.scrollToBottom();
+  }
+
+  async remoteTerminal() {
+    if (this.pynq.connectionStatus != ConnectionStatus.CONNECTED) return;
+
+    try {
+      let response = await this.pynq.terminal();
+      response.stdout.forEach(line => this.stdout.push(line));
+      response.stderr.forEach(line => this.stderr.push(line));
+      this.scrollToBottom();
+
+      if (response.running) {
+        this.remoteTerminalJob = setTimeout(() => this.remoteTerminal(), 600);
+      }
+    } catch (e) {
+
+    }
   }
 
 }

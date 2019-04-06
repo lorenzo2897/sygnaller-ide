@@ -302,6 +302,15 @@ export class Pynq {
       }
     }
   }
+
+  async terminal(stdin: string = null) {
+    let resp: any = await this.http.post(`http://${this.connectedIp}:8000/python_terminal`, {stdin: stdin}).pipe(timeout(9000)).toPromise();
+    if (resp.error) {
+      throw resp.error;
+    }
+    this.isRunning = resp.running;
+    return resp;
+  }
 }
 
 /* **************************************************************** */

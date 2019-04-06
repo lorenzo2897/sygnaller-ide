@@ -247,6 +247,8 @@ export class AppComponent {
       this.saveFile();
       await this.pynq.uploadFiles(this.project, p => this.progressBar = p);
       await this.pynq.startRunning(this.project);
+      this.activeSelection = {category: 'tools', file: 'terminal'};
+      this.selectionChanged(this.activeSelection);
       this.progressBar = null;
     } catch (err) {
       this.alert('Run failed', err);

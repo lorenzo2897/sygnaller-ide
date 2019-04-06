@@ -1,8 +1,10 @@
 <div id="container" *ngIf="_show" [ngClass]="darkTheme ? 'dark' : ''">
-  <pre id="output">{{stdout}}</pre>
+  <br>
+  <pre class="output" *ngFor="let line of stdout">{{line}}</pre>
+  <pre class="output error" *ngFor="let line of stderr">{{line}}</pre>
   <div id="input-line" class="input-line">
     <div class="prompt">&gt;</div>
-    <div><input #cmdline class="cmdline" autofocus (keydown)="commandLineKey($event)" /></div>
+    <div><input #cmdline class="cmdline" (keydown)="commandLineKey($event)" /></div>
   </div>
   <div id="vbuffer" (click)="cmdline.focus()"></div>
 </div>

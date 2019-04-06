@@ -20,10 +20,18 @@
   color: white;
 }
 
-#output {
+.output {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-family: Consolas, Inconsolata, monospace;
+  margin: 0;
+}
+
+#container > .output.error {
+  color: darkred;
+}
+#container.dark > .output.error {
+  color: lightcoral;
 }
 
 .input-line {
