@@ -101,14 +101,14 @@
             <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTING">
               <i class="yellow plug icon"></i>Connecting...
             </button>
-            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED">
+            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning">
               <i class="wrench icon"></i>Build
             </button>
             <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning" (click)="runProject()">
               <i class="play icon"></i>Run
             </button>
             <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && pynq.isRunning" (click)="stopProject()">
-              <i class="stop icon red"></i>Stop
+              <i class="stop icon red"></i>Stop running
             </button>
           </div>
         </div>
@@ -131,7 +131,8 @@
       [project]="project"
       [(selection)]="activeSelection"
       (selectionChange)="selectionChanged($event)"
-      [darkTheme]="darkTheme">
+      [darkTheme]="darkTheme"
+      [showTools]="pynq.connectionStatus == StatusType.CONNECTED">
     </app-sidebar>
   </div>
 

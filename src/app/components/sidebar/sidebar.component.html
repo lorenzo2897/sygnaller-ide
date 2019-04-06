@@ -1,3 +1,13 @@
+<h4 class="ui" *ngIf="showTools">Debug tools</h4>
+<div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''" *ngIf="showTools">
+  <a class="item"
+     *ngFor="let t of tools"
+     [ngClass]="selection?.category == 'tools' && selection?.file == t.id ? 'active' : ''"
+     (click)="fileClicked('tools', t.id)">
+    <i class="icon left" [ngClass]="t.icon"></i>
+    {{t.label}}
+  </a>
+</div>
 <h4 class="ui">Software files</h4>
 <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
   <a class="item"

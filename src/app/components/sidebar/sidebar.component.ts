@@ -15,10 +15,17 @@ export interface SidebarSelection {
 export class SidebarComponent implements AfterViewInit {
   @Input() darkTheme: boolean = false;
   @Input() project: Project = null;
+  @Input() showTools: boolean = false;
 
   @Input() selection: SidebarSelection = null;
   @Output() selectionChange: EventEmitter<SidebarSelection> = new EventEmitter<SidebarSelection>();
 
+  tools = [
+    {id: 'build', label: 'Build info', icon: 'info circle olive', runOnly: false},
+    {id: 'terminal', label: 'Terminal', icon: 'terminal olive', runOnly: false},
+    {id: 'oscilloscope', label: 'Oscilloscope', icon: 'chart area olive', runOnly: true},
+    {id: 'video', label: 'Video stream', icon: 'video olive', runOnly: true}
+  ];
   softwareFiles: string[] = [];
   hardwareFiles: string[] = [];
   dataFiles: string[] = [];

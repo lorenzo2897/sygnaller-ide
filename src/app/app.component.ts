@@ -115,6 +115,7 @@ export class AppComponent {
     console.log('Selection changed:', selection.category, '/', selection.file);
 
     let isText = (s: SidebarSelection) => {
+      if (s.category == 'tools') return false;
       if (s.category == 'software') return true;
       if (s.category == 'hardware') return true;
 
