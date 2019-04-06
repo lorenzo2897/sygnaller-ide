@@ -22,6 +22,10 @@ export class Project {
     }
   }
 
+  public get shortPath() {
+    return this.remote_path.basename(this.path);
+  }
+
   private get projectJsonFile() : string {
     return this.remote_path.join(this.path, PROJECT_JSON_FILE);
   }
@@ -117,6 +121,11 @@ export class Project {
     return this.listFilesInDirectory('data');
   }
 
+  hasMainPy() : boolean {
+    const p = this.remote_path.resolve(this.path, 'software/main.py');
+    return this.remote_fs.existsSync(p);
+  }
+
   /* *********************** Static methods *********************** */
 
   static create(electron: ElectronService, name: string, path: string) : Promise<Project> {
@@ -154,6 +163,8 @@ export class Project {
   }
 
   static findUnconflictingName(electron: ElectronService, filename: string) : string {
+    // filename.ext -> filename-1.ext -> filename-2.ext -> ...
+
     if (!electron.remote.require('fs').existsSync(filename)) {
       return filename;
     }

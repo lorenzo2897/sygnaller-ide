@@ -32,6 +32,9 @@ export class AppComponent {
   newFileModal_category = null;
   newFileModal_placeholder = null;
 
+  statusText = '';
+  progressBar = null;
+
   @ViewChild('simpleAlertModal')
   public simpleAlertModal:ModalTemplate<any, void, void>;
 
@@ -236,6 +239,26 @@ export class AppComponent {
 
   disconnectPynq() {
     this.pynq.disconnect();
+  }
+
+  async runProject() {
+    try {
+      this.saveFile();
+      await this.pynq.uploadFiles(this.project, p => this.progressBar = p);
+      await this.pynq.startRunning(this.project);
+      this.progressBar = null;
+    } catch (err) {
+      this.alert('Run failed', err);
+      this.progressBar = null;
+    }
+  }
+
+  async stopProject() {
+    try {
+      await this.pynq.stopRunning();
+    } catch (err) {
+      this.alert('Stop failed', err);
+    }
   }
 
 }

@@ -104,8 +104,11 @@
             <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED">
               <i class="wrench icon"></i>Build
             </button>
-            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED">
+            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning" (click)="runProject()">
               <i class="play icon"></i>Run
+            </button>
+            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && pynq.isRunning" (click)="stopProject()">
+              <i class="stop icon red"></i>Stop
             </button>
           </div>
         </div>
@@ -148,7 +151,12 @@
 </div>
 
 <div class="status-bar" [ngClass]="darkTheme ? 'dark' : ''">
-  &nbsp;
+  <span>&nbsp;{{statusText}}</span>
+  <sui-progress class="bottom attached blue active"
+                [class]="darkTheme ? 'inverted' : ''"
+                [value]="progressBar"
+                [showProgress]="false"
+                *ngIf="progressBar != null"></sui-progress>
 </div>
 
 

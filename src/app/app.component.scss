@@ -44,10 +44,16 @@
 
 .status-bar {
   background: $color-toolbar-light;
-  padding: 2px 8px;
   user-select: none;
+  min-height: 26px;
 }
 .dark.status-bar {
   background: $color-toolbar-dark;
   // color: rgba(255, 255, 255, 0.8);
+}
+.status-bar span {
+  padding: 2px 8px;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
 }

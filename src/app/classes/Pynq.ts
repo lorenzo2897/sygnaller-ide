@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {timeout} from 'rxjs/operators';
 import {TimeoutError} from 'rxjs';
+import {Project} from './Project';
+import {ElectronService} from 'ngx-electron';
 
 const REGISTRY_URL = 'http://silvestri.io:8000/';
 
@@ -10,17 +12,26 @@ const REGISTRY_URL = 'http://silvestri.io:8000/';
   providedIn: 'root',
 })
 export class Pynq {
+  // Connection
   public connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED;
   public connectedMac: string = '';
   public connectedIp: string = '';
 
+  // Runtime
   public isRunning: boolean = false;
 
+  // Recents
   public recentConnections = [];
 
+
+  /* Private variables */
   private periodicCheckHandle = null;
 
-  constructor(private http: HttpClient) {
+  // File transfer
+  private lastUploadTimes: Map<string, number> = new Map();
+
+
+  constructor(private http: HttpClient, private electron: ElectronService) {
     let r = localStorage.getItem('recentConnections');
     if (r)
       this.recentConnections = JSON.parse(r);
@@ -68,9 +79,10 @@ export class Pynq {
       this.connectionStatus = ConnectionStatus.CONNECTED;
       this.connectedMac = mac;
       this.connectedIp = resolvedIP;
+      this.lastUploadTimes.clear();
 
       /* set up a periodic ping to check whether we're still connected */
-      this.periodicCheckHandle = setInterval(() => this.periodicConnectionCheck(), 20000);
+      this.periodicCheckHandle = setTimeout(() => this.periodicConnectionCheck(), 20000);
 
     } catch (e) {
       this.connectionStatus = ConnectionStatus.DISCONNECTED;
@@ -80,27 +92,28 @@ export class Pynq {
 
   async periodicConnectionCheck() {
     if (this.connectionStatus != ConnectionStatus.CONNECTED) {
-      clearInterval(this.periodicCheckHandle);
-      this.periodicCheckHandle = null;
+      return;
     }
 
     try {
       await this.pingDevice(this.connectedIp);
+      this.periodicCheckHandle = setTimeout(() => this.periodicConnectionCheck(), this.isRunning ? 5000 : 20000);
     } catch (e) {
       this.disconnect(false);
     }
   }
 
-  disconnect(stopProcesses = true) {
+  async disconnect(stopProcesses = true) {
     console.log('Disconnecting');
+
     /* make sure any running processes are stopped */
     if (stopProcesses) {
-
+      await this.stopRunning();
     }
 
     /* stop the pings */
     if (this.periodicCheckHandle) {
-      clearInterval(this.periodicCheckHandle);
+      clearTimeout(this.periodicCheckHandle);
       this.periodicCheckHandle = null;
     }
 
@@ -150,7 +163,7 @@ export class Pynq {
         throw 'The device is not responding. Check your connections and try again.';
       } else if (err instanceof TimeoutError) {
         console.log('Timeout error', err);
-        throw 'The device is not responding. Check your connections and try again.';
+        throw 'The device is not responding. Check your connections and make sure that you are on the same network as the Pynq.';
       } else if (err instanceof DOMException) {
         console.log('DOM error', err);
         throw 'The format of the IP address is incorrect.';
@@ -159,7 +172,130 @@ export class Pynq {
         throw err;
       }
     }
+  }
 
+  async uploadFiles(project: Project, callback: (progress: number) => void) {
+    if (this.connectionStatus != ConnectionStatus.CONNECTED) throw 'You are not connected to a Pynq board';
+
+    const fs = this.electron.remote.require('fs');
+    const nodePath = this.electron.remote.require('path');
+
+    // collect files
+    const fullPath = (category: string, filename: string) => nodePath.resolve(project.path, category, filename);
+    let softwareFiles = (await project.listSoftwareFiles()).map(f => fullPath('software', f));
+    let hardwareFiles = (await project.listHardwareFiles()).map(f => fullPath('hardware', f));
+    let dataFiles = (await project.listDataFiles()).map(f => fullPath('data', f));
+
+    // select only those which were edited since last upload
+    let modified = (filename: string) => {
+      if (!this.lastUploadTimes.has(project.shortPath)) return true;
+      const lastModified = Math.round(fs.statSync(filename).mtimeMs);
+      return lastModified > this.lastUploadTimes.get(project.shortPath);
+    };
+    softwareFiles = softwareFiles.filter(f => modified(f));
+    hardwareFiles = hardwareFiles.filter(f => modified(f));
+    dataFiles = dataFiles.filter(f => modified(f));
+
+    // count progress
+    const totalFiles = softwareFiles.length + hardwareFiles.length + dataFiles.length;
+    callback(0);
+
+    // transfer to server
+    const readToBase64 = (filename: string) => {
+      return new Promise(resolve => {
+        fs.readFile(filename, {encoding: 'base64'}, (err, data) => {
+          if (err) {
+            throw err;
+          }
+          resolve(data);
+        });
+      })
+    };
+    const sendFiles = async (files: string[]) => {
+      let filesArray = [];
+
+      for (let f of files) {
+        filesArray.push({
+          path: nodePath.relative(project.path, f),
+          contents: await readToBase64(f)
+        });
+      }
+
+      let requestContents = {
+        project: project.shortPath,
+        files: filesArray
+      };
+
+      try {
+        let resp: any = await this.http.post(`http://${this.connectedIp}:8000/upload_files`, requestContents).toPromise();
+        if (resp.error) {
+          throw resp.error;
+        }
+      } catch (err) {
+        if (err instanceof HttpErrorResponse || err instanceof DOMException) {
+          console.log('Connection error', err);
+          throw 'Lost connection to the device while uploading source files.';
+        } else {
+          console.log('Unknown error', err);
+          throw err;
+        }
+      }
+    };
+
+    await sendFiles(softwareFiles);
+    callback(softwareFiles.length * 100 / totalFiles);
+
+    await sendFiles(hardwareFiles);
+    callback((softwareFiles.length + hardwareFiles.length) * 100 / totalFiles);
+
+    await sendFiles(dataFiles);
+    callback(100);
+
+    this.lastUploadTimes.set(project.shortPath, Date.now());
+  }
+
+  async startRunning(project: Project) {
+    if (!project.hasMainPy()) {
+      throw 'Your project must include a main.py file, which will be started when you click the Run button.';
+    }
+    let runOptions = {
+      project: project.shortPath,
+      target: 'software/main.py'
+    };
+    try {
+      let resp: any = await this.http.post(`http://${this.connectedIp}:8000/run_python`, runOptions).toPromise();
+      if (resp.error) {
+        throw resp.error;
+      }
+      this.isRunning = true;
+      clearTimeout(this.periodicCheckHandle);
+      this.periodicCheckHandle = setTimeout(() => this.periodicConnectionCheck(), 2000);
+    } catch (err) {
+      if (err instanceof HttpErrorResponse || err instanceof DOMException) {
+        console.log('Connection error', err);
+        throw 'Lost connection to the device while uploading source files.';
+      } else {
+        console.log('Unknown error', err);
+        throw err;
+      }
+    }
+  }
+
+  async stopRunning() {
+    try {
+      let resp: any = await this.http.post(`http://${this.connectedIp}:8000/stop_python`, {}).toPromise();
+      if (resp.error) {
+        throw resp.error;
+      }
+    } catch (err) {
+      if (err instanceof HttpErrorResponse || err instanceof DOMException) {
+        console.log('Connection error', err);
+        throw 'Lost connection to the device while uploading source files.';
+      } else {
+        console.log('Unknown error', err);
+        throw err;
+      }
+    }
   }
 }
 
