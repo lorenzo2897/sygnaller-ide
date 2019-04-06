@@ -77,7 +77,7 @@ export class Pynq {
       /* success */
       console.log('Connected successfully', ping);
       this.connectionStatus = ConnectionStatus.CONNECTED;
-      this.connectedMac = mac;
+      this.connectedMac = ping.mac;
       this.connectedIp = resolvedIP;
       this.lastUploadTimes.clear();
 
