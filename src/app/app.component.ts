@@ -89,7 +89,9 @@ export class AppComponent {
   }
 
   projectLoadError(error) {
-    this.alert('Cannot load project', error.toString());
+    this.ngZone.run(() => {
+      this.alert('Cannot load project', error.toString());
+    });
   }
 
   closeProject() {
