@@ -29,7 +29,7 @@ export class NewConnectionModalComponent {
   constructor() { }
 
   approved(modal) {
-    let strippedMac = this.mac.replace(':', '');
+    let strippedMac = this.mac.replace(/:/g, '');
 
     // check for errors
     if (this.connectionMode == 'mac') {
