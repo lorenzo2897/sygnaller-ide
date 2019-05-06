@@ -5,7 +5,7 @@ import {TimeoutError} from 'rxjs';
 import {Project} from './Project';
 import {ElectronService} from 'ngx-electron';
 
-const REGISTRY_URL = 'http://silvestri.io:8000/';
+const REGISTRY_URL = 'http://sygnaller.silvestri.io:8000/';
 
 
 @Injectable({
