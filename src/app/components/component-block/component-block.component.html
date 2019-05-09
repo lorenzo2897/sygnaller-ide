@@ -1,0 +1,34 @@
+<div class="box">
+  <!-- binding, dash, port name, empty, port name, dash, binding -->
+
+  <div></div>
+
+  <table>
+    <tr *ngFor="let p of inputPorts">
+      <td class="r">{{p.direction}}</td>
+    </tr>
+  </table>
+  <div class="inside">
+    <div class="bkg"></div>
+    <table>
+      <tr *ngFor="let p of inputPorts">
+        <td class="dash"><div></div></td>
+        <td class="l">{{p.name}}</td>
+      </tr>
+    </table>
+
+    <table>
+      <tr *ngFor="let p of outputPorts">
+        <td class="r">{{p.name}}</td>
+        <td class="dash"><div></div></td>
+      </tr>
+    </table>
+  </div>
+  <table>
+    <tr *ngFor="let p of outputPorts">
+      <td class="l">{{p.direction}}</td>
+    </tr>
+  </table>
+
+  <div></div>
+</div>

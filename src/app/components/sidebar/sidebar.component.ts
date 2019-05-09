@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, NgZone, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, NgZone, Output, ViewRef} from '@angular/core';
 import {Project} from '../../classes/Project';
 import {ElectronService} from 'ngx-electron';
 
@@ -66,7 +66,9 @@ export class SidebarComponent implements AfterViewInit {
         console.log(err);
       });
     Promise.all([p1, p2, p3]).then(
-      () => this.changeDetector.detectChanges()
+      () => {
+        if (!(this.changeDetector as ViewRef).destroyed) this.changeDetector.detectChanges()
+      }
     );
   }
 

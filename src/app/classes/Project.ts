@@ -1,6 +1,7 @@
 
 import {ElectronService} from 'ngx-electron';
 import * as fs from 'fs';
+import {ComponentSpec} from './Components';
 
 const PROJECT_JSON_FILE = 'project.json';
 
@@ -11,6 +12,7 @@ export interface RecentProject {
 
 export class Project {
   name: string;
+  components: Map<string, ComponentSpec> = new Map();
 
   private readonly remote_fs;
   private readonly remote_path;
@@ -38,6 +40,8 @@ export class Project {
         try {
           let properties = JSON.parse(data);
           this.name = properties.name;
+          this.components.clear();
+          properties.components.forEach(c => this.components.set(c.moduleName, c));
         } catch (e) {
           reject('Project settings are corrupt');
         }
@@ -48,7 +52,8 @@ export class Project {
 
   private writePropertiesToFile() : Promise<void> {
     let data = {
-      name: this.name
+      name: this.name,
+      components: Array.from(this.components.values())
     };
 
     return new Promise<void>((resolve, reject) => {
@@ -124,6 +129,10 @@ export class Project {
   hasMainPy() : boolean {
     const p = this.remote_path.resolve(this.path, 'software/main.py');
     return this.remote_fs.existsSync(p);
+  }
+
+  save() {
+    return this.writePropertiesToFile();
   }
 
   /* *********************** Static methods *********************** */

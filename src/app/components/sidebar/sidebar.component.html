@@ -22,6 +22,12 @@
 <h4 class="ui">Hardware files</h4>
 <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
   <a class="item"
+     [ngClass]="selection?.category == 'tools' && selection?.file == 'components' ? 'active' : ''"
+     (click)="fileClicked('tools', 'components')">
+    <i class="icon pink left sitemap"></i>
+    Component designer
+  </a>
+  <a class="item"
      *ngFor="let f of hardwareFiles"
      [ngClass]="selection?.category == 'hardware' && selection?.file == f ? 'active' : ''"
      (click)="fileClicked('hardware', f)"

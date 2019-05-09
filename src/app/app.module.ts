@@ -17,6 +17,8 @@ import { RenameFileModalComponent } from './modals/rename-file-modal/rename-file
 import { DeleteFileModalComponent } from './modals/delete-file-modal/delete-file-modal.component';
 import { NewConnectionModalComponent } from './modals/new-connection-modal/new-connection-modal.component';
 import { FormatMacPipe } from './pipes/format-mac.pipe';
+import { ComponentEditorComponent } from './components/component-editor/component-editor.component';
+import { ComponentBlockComponent } from './components/component-block/component-block.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { FormatMacPipe } from './pipes/format-mac.pipe';
     DeleteFileModalComponent,
     NewConnectionModalComponent,
     TerminalComponent,
-    FormatMacPipe
+    FormatMacPipe,
+    ComponentEditorComponent,
+    ComponentBlockComponent
   ],
   imports: [
     BrowserModule,

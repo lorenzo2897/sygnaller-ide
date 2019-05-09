@@ -1,0 +1,47 @@
+
+<button class="ui button pointing dropdown" suiDropdown>
+  <i class="add icon pink"></i>Build a new component
+
+  <div class="menu" suiDropdownMenu style="background: #FBFBFB;">
+    <div class="item disabled" *ngIf="availableModules.size == 0">
+      <em>Verilog modules you create will appear here</em>
+    </div>
+    <div class="item"
+         *ngFor="let c of availableModules | keyvalue"
+         (click)="newComponent(c.value)">
+      {{c.value.name}}
+    </div>
+  </div>
+</button>
+
+<div class="ui card" *ngIf="project.components.size == 0">
+  <div class="content">
+    <p>
+      <i class="icon info circle blue"></i>
+      Components are the glue between your Python code and the hardware you design.
+    </p>
+    <ol>
+      <li>Start by coding up a Verilog module</li>
+      <li>Select your module from the <strong>New component</strong> menu</li>
+      <li>Make the necessary input/output connections</li>
+      <li>We'll show you how to interface with it from Python code</li>
+    </ol>
+  </div>
+</div>
+
+<div class="ui card" *ngFor="let c of project.components | keyvalue">
+  <div class="content">
+    <h3>{{c.value.moduleName}}
+      <i class="red icon right floated trash pointy" (click)="deleteComponent(c.value)"></i></h3>
+  </div>
+  <div class="content horizontal-split">
+    <div style="flex: 1.8; overflow-x: auto;">
+      <app-component-block [verilogModule]="availableModules.get(c.value.moduleName)" [(bindings)]="c.value.bindings"></app-component-block>
+    </div>
+    &nbsp;
+    <div>
+      <pre class="code-sample">
+{{'# Python\nfrom Syngaller import hw\n\nhw.' + c.value.moduleName + '\n'}}</pre>
+    </div>
+  </div>
+</div>

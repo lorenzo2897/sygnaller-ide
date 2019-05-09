@@ -26,10 +26,25 @@ export class Pynq {
 
   /* Private variables */
   private periodicCheckHandle = null;
+  private periodicBuildHandle = null;
+  private _activeProject: string = null;
 
   // File transfer
   private lastUploadTimes: Map<string, number> = new Map();
 
+
+  // Compilation
+  public isBuilding: boolean = false;
+  public logs: string = '';
+  get activeProject() {
+    return this._activeProject;
+  }
+  set activeProject(value) {
+    this._activeProject = value;
+    this.logs = '';
+    this.isBuilding = false;
+    this.periodicBuildCheck();
+  }
 
   constructor(private http: HttpClient, private electron: ElectronService) {
     let r = localStorage.getItem('recentConnections');
@@ -83,6 +98,7 @@ export class Pynq {
 
       /* set up a periodic ping to check whether we're still connected */
       this.periodicCheckHandle = setTimeout(() => this.periodicConnectionCheck(), 20000);
+      this.periodicBuildCheck();
 
     } catch (e) {
       this.connectionStatus = ConnectionStatus.DISCONNECTED;
@@ -310,6 +326,78 @@ export class Pynq {
     }
     this.isRunning = resp.running;
     return resp;
+  }
+
+  async startBuild(project: Project) {
+    try {
+      let resp: any = await this.http.post(`http://${this.connectedIp}:8000/start_build`, {project: project.shortPath}).toPromise();
+      if (resp.error) {
+        throw resp.error;
+      }
+      this.periodicBuildCheck();
+    } catch (err) {
+      if (err instanceof HttpErrorResponse || err instanceof DOMException) {
+        console.log('Connection error', err);
+        throw 'Lost connection to the device while uploading source files.';
+      } else {
+        console.log('Unknown error', err);
+        throw err;
+      }
+    }
+  }
+
+  async getBuildProgress(projectName) {
+    try {
+      let resp: any = await this.http.post(`http://${this.connectedIp}:8000/get_build_progress`, {project: projectName}).toPromise();
+      if (resp.error) {
+        throw resp.error;
+      }
+      this.logs += resp.logs;
+      this.isBuilding = resp.running;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse || err instanceof DOMException) {
+        console.log('Connection error', err);
+        throw 'Lost connection to the device while uploading source files.';
+      } else {
+        console.log('Unknown error', err);
+        throw err;
+      }
+    }
+  }
+
+  async clearBuildCache(projectName) {
+    try {
+      let resp: any = await this.http.post(`http://${this.connectedIp}:8000/clear_build_cache`, {project: projectName}).toPromise();
+      if (resp.error) {
+        throw resp.error;
+      }
+    } catch (err) {
+      if (err instanceof HttpErrorResponse || err instanceof DOMException) {
+        console.log('Connection error', err);
+        throw 'Lost connection to the device while uploading source files.';
+      } else {
+        console.log('Unknown error', err);
+        throw err;
+      }
+    }
+  }
+
+  async periodicBuildCheck() {
+    console.log("build check.");
+    clearTimeout(this.periodicBuildHandle);
+    if (this.connectionStatus != ConnectionStatus.CONNECTED) {
+      return;
+    }
+    if (!this._activeProject) {
+      return;
+    }
+
+    try {
+      await this.getBuildProgress(this._activeProject);
+      this.periodicBuildHandle = setTimeout(() => this.periodicBuildCheck(), this.isBuilding ? 3000 : 30000);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 

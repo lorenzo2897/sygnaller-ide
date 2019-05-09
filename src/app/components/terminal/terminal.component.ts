@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostBinding, Input, ViewChild} from '@angular/core';
 import {ConnectionStatus, Pynq} from '../../classes/Pynq';
 
 @Component({
@@ -11,6 +11,7 @@ export class TerminalComponent {
 
   @Input() pynq: Pynq;
   private _show: boolean;
+  @HostBinding('style.display') private _display: string = "block";
   @Input() darkTheme: boolean;
 
   commandHistory: string[] = [];
@@ -26,6 +27,7 @@ export class TerminalComponent {
 
   @Input() set show(value: boolean) {
     this._show = value;
+    this._display = value ? 'block' : 'none';
     if (value == true) {
       this.historyLevel = 0;
       clearTimeout(this.remoteTerminalJob);

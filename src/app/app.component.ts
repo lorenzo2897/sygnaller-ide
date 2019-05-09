@@ -84,6 +84,7 @@ export class AppComponent {
       this.editorOriginalContents = '';
       this.editorContents = '';
       this.project = project;
+      this.pynq.activeProject = project.shortPath;
       this.titleService.setTitle(project.name + ' - Sygnaller');
     });
   }
@@ -94,9 +95,11 @@ export class AppComponent {
     });
   }
 
-  closeProject() {
+  async closeProject() {
     this.saveFile();
+    this.project.save();
     this.project = null;
+    this.pynq.activeProject = null;
     this.titleService.setTitle('Sygnaller');
   }
 
@@ -269,6 +272,24 @@ export class AppComponent {
     } catch (err) {
       this.alert('Stop failed', err);
     }
+  }
+
+  async buildProject() {
+    try {
+      this.saveFile();
+      await this.pynq.uploadFiles(this.project, p => this.progressBar = p);
+      await this.pynq.startBuild(this.project);
+      this.activeSelection = {category: 'tools', file: 'build'};
+      this.selectionChanged(this.activeSelection);
+      this.progressBar = null;
+    } catch (err) {
+      this.alert('Build failed', err);
+      this.progressBar = null;
+    }
+  }
+
+  async stopBuilding() {
+
   }
 
 }
