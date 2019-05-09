@@ -42,7 +42,7 @@ export class RenameFileModalComponent {
       this.error = 1;
       return;
     }
-    if (this.filename.match(/[^a-z0-9_\-.]/gi)) {
+    if (this.filename.match(/[^a-z0-9_.]/gi)) {
       this.error = 2;
       return;
     }

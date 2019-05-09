@@ -180,6 +180,11 @@ export class AppComponent {
         filename += '.py';
       }
     }
+    if (this.newFileModal_category == 'hardware') {
+      if (!filename.toLowerCase().endsWith('.v')) {
+        filename += '.v';
+      }
+    }
 
     let fullPath = this.electron.remote.require('path').resolve(this.newFileModal_dirname, filename);
     this.ngZone.run(() => {
