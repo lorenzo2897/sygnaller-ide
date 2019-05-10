@@ -20,11 +20,11 @@ export class CodeEditorComponent implements AfterViewInit {
     if (val.toLowerCase().endsWith('.py')) {
       this.editorMode = 'python';
       newOptions.enableBasicAutocompletion = true;
-      newOptions.enableLiveAutocompletion = true;
+      newOptions.enableLiveAutocompletion = false;
     } else if (val.toLowerCase().endsWith('.v')) {
       this.editorMode = 'verilog';
       newOptions.enableBasicAutocompletion = true;
-      newOptions.enableLiveAutocompletion = true;
+      newOptions.enableLiveAutocompletion = false;
     } else {
       this.editorMode = 'text';
       newOptions.enableBasicAutocompletion = false;
@@ -52,7 +52,7 @@ export class CodeEditorComponent implements AfterViewInit {
   editorOptions = {
     printMargin: false,
     enableBasicAutocompletion: true,
-    enableLiveAutocompletion: true,
+    enableLiveAutocompletion: false,
     useSoftTabs: true,
     scrollPastEnd: 0.5
   };
