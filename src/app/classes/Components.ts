@@ -49,7 +49,6 @@ export class VerilogModule {
       found.push(module);
     }
 
-    console.log(found);
     return found;
   }
 }

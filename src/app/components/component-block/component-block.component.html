@@ -1,11 +1,17 @@
-<div class="box">
+<div class="box" [ngClass]="dark ? 'dark' : ''" style="overflow: initial;">
   <!-- binding, dash, port name, empty, port name, dash, binding -->
 
   <div></div>
 
   <table>
     <tr *ngFor="let p of inputPorts">
-      <td class="r">{{p.direction}}</td>
+      <td class="r binding ui pointing dropdown" suiDropdown>
+        {{_bindingsMap.get(p.name) ? _bindingsMap.get(p.name): 'input'}}
+        <div class="menu" suiDropdownMenu>
+          <div class="item" (click)="removeBinding(p.name)">input</div>
+          <div class="item" (click)="setBinding(p.name, 'clock')">clock</div>
+        </div>
+      </td>
     </tr>
   </table>
   <div class="inside">
@@ -26,7 +32,13 @@
   </div>
   <table>
     <tr *ngFor="let p of outputPorts">
-      <td class="l">{{p.direction}}</td>
+      <td class="l binding ui pointing dropdown" suiDropdown>
+        {{_bindingsMap.get(p.name) ? _bindingsMap.get(p.name): 'output'}}
+        <div class="menu" suiDropdownMenu>
+          <div class="item" (click)="removeBinding(p.name)">output</div>
+          <div class="item" (click)="setBinding(p.name, 'scope')">scope</div>
+        </div>
+      </td>
     </tr>
   </table>
 

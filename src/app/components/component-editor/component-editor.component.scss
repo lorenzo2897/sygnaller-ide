@@ -1,5 +1,5 @@
 :host {
-  padding: 14px;
+  padding: 14px 14px 80px;
   overflow-y: auto;
 }
 
@@ -19,9 +19,39 @@
 }
 
 .code-sample {
-  font-family: monospace;
+  margin-top: 0;
+  font-family: "Monaco", "Consolas", monospace;
   width: 300px;
   max-width: 25vw;
   white-space: pre;
   overflow-x: auto;
+  user-select: text;
+  cursor: text;
+}
+.code-sample .comment {
+  color: green;
+}
+.code-sample .keyword {
+  color: deeppink;
+}
+.code-sample .object {
+  color: #0e3bc1;
+}
+.code-sample.dark .comment {
+  color: #64a500;
+}
+.code-sample.dark .keyword {
+  color: hotpink;
+}
+.code-sample.dark .object {
+  color: lightblue;
+}
+
+.delete-component {
+  cursor: pointer;
+  float: right;
+  opacity: 0.9;
+}
+.delete-component:hover {
+  opacity: 1;
 }

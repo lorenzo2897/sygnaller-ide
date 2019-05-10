@@ -277,6 +277,7 @@ export class AppComponent {
   async buildProject() {
     try {
       this.saveFile();
+      await this.project.save();
       await this.pynq.uploadFiles(this.project, p => this.progressBar = p);
       await this.pynq.startBuild(this.project);
       this.activeSelection = {category: 'tools', file: 'build'};

@@ -57,10 +57,13 @@ export class ComponentEditorComponent implements OnInit {
         bindings: []
       }
     );
+
+    this.project.save();
   }
 
   deleteComponent(c: ComponentSpec) {
     this.project.components.delete(c.moduleName);
+    this.project.save();
   }
 
 }

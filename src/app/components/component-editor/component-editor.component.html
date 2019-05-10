@@ -32,16 +32,29 @@
 <div class="ui card" *ngFor="let c of project.components | keyvalue">
   <div class="content">
     <h3>{{c.value.moduleName}}
-      <i class="red icon right floated trash pointy" (click)="deleteComponent(c.value)"></i></h3>
+      <i class="red trash icon delete-component" [ngClass]="darkTheme ? 'inverted' : ''" (click)="deleteComponent(c.value)"></i></h3>
   </div>
   <div class="content horizontal-split">
-    <div style="flex: 1.8; overflow-x: auto;">
-      <app-component-block [verilogModule]="availableModules.get(c.value.moduleName)" [(bindings)]="c.value.bindings"></app-component-block>
+    <div style="flex: 1.8;">
+      <app-component-block
+        [verilogModule]="availableModules.get(c.value.moduleName)"
+        [(bindings)]="c.value.bindings"
+        (bindingsChange)="project.save()"
+        [dark]="darkTheme">
+      </app-component-block>
     </div>
     &nbsp;
     <div>
-      <pre class="code-sample">
-{{'# Python\nfrom Syngaller import hw\n\nhw.' + c.value.moduleName + '\n'}}</pre>
+      <pre class="code-sample" [ngClass]="darkTheme ? 'dark' : ''">
+<span class="keyword">from</span> Sygnaller <span class="keyword">import</span> hw
+
+<span class="comment"># Setting input ports</span>
+<span>hw.<span class="object">{{c.value.moduleName}}</span>.port_name <span class="keyword">=</span> value
+</span>
+<span class="comment"># Reading output ports</span>
+<span>result <span class="keyword">=</span> hw.<span class="object">{{c.value.moduleName}}</span>.port_name
+</span>
+</pre>
     </div>
   </div>
 </div>
