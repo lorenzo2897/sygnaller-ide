@@ -5,7 +5,6 @@ import {TimeoutError} from 'rxjs';
 import {Project} from './Project';
 import {ElectronService} from 'ngx-electron';
 import {VerilogModule} from './Components';
-import {bind} from '@angular/core/src/render3';
 
 const REGISTRY_URL = 'http://sygnaller.silvestri.io:8000/';
 
@@ -371,6 +370,7 @@ export class Pynq {
       if (resp.error) {
         throw resp.error;
       }
+      this.logs = '';
       this.periodicBuildCheck();
     } catch (err) {
       if (err instanceof HttpErrorResponse || err instanceof DOMException) {

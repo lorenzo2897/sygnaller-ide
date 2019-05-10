@@ -19,6 +19,7 @@ import { NewConnectionModalComponent } from './modals/new-connection-modal/new-c
 import { FormatMacPipe } from './pipes/format-mac.pipe';
 import { ComponentEditorComponent } from './components/component-editor/component-editor.component';
 import { ComponentBlockComponent } from './components/component-block/component-block.component';
+import { BuildInfoComponent } from './components/build-info/build-info.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { ComponentBlockComponent } from './components/component-block/component-
     TerminalComponent,
     FormatMacPipe,
     ComponentEditorComponent,
-    ComponentBlockComponent
+    ComponentBlockComponent,
+    BuildInfoComponent
   ],
   imports: [
     BrowserModule,

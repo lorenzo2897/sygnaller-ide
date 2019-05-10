@@ -280,8 +280,7 @@ export class AppComponent {
       await this.project.save();
       await this.pynq.uploadFiles(this.project, p => this.progressBar = p);
       await this.pynq.startBuild(this.project);
-      this.activeSelection = {category: 'tools', file: 'build'};
-      this.selectionChanged(this.activeSelection);
+      this.goToBuildPage();
       this.progressBar = null;
     } catch (err) {
       this.alert('Build failed', err);
@@ -291,6 +290,11 @@ export class AppComponent {
 
   async stopBuilding() {
 
+  }
+
+  goToBuildPage() {
+    this.activeSelection = {category: 'tools', file: 'build'};
+    this.selectionChanged(this.activeSelection);
   }
 
 }

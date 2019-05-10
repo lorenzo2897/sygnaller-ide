@@ -109,7 +109,7 @@
             <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning && !pynq.isBuilding" (click)="buildProject()">
               <i class="wrench icon"></i>Build
             </button>
-            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning && pynq.isBuilding">
+            <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning && pynq.isBuilding" (click)="goToBuildPage()">
               <i class="wrench icon"></i>Building
             </button>
             <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning" (click)="runProject()">
@@ -177,6 +177,12 @@
     [project]="project"
     (onError)="alert($event.title, $event.message)">
   </app-component-editor>
+
+  <app-build-info
+    class="main-content"
+    *ngIf="project != null && activeSelection?.category == 'tools' && activeSelection?.file == 'build'"
+    [pynq]="pynq">
+  </app-build-info>
 </div>
 
 <div class="status-bar" [ngClass]="darkTheme ? 'dark' : ''">
