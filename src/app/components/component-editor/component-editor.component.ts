@@ -32,7 +32,7 @@ export class ComponentEditorComponent implements OnInit {
     sources
       .map(s => VerilogModule.extractFrom(s))
       .reduce((a, b) => a.concat(b), [])
-      .forEach(m => this.availableModules.set(m.name, m))
+      .forEach(m => this.availableModules.set(m.name, m));
 
     this.project.components.forEach(c => {
       if (!this.availableModules.has(c.moduleName)) {

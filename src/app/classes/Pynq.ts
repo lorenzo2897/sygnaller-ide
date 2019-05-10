@@ -4,6 +4,8 @@ import {timeout} from 'rxjs/operators';
 import {TimeoutError} from 'rxjs';
 import {Project} from './Project';
 import {ElectronService} from 'ngx-electron';
+import {VerilogModule} from './Components';
+import {bind} from '@angular/core/src/render3';
 
 const REGISTRY_URL = 'http://sygnaller.silvestri.io:8000/';
 
@@ -328,9 +330,44 @@ export class Pynq {
     return resp;
   }
 
+  private async getComponentSpecs(project: Project) {
+    const fs = this.electron.remote.require('fs');
+    const nodePath = this.electron.remote.require('path');
+    let availableModules: Map<string, VerilogModule> = new Map();
+
+    // build module list from verilog sources
+    let sources = (await project.listHardwareFiles())
+      .map(f => nodePath.join(project.path, 'hardware', f))
+      .map(f => fs.readFileSync(f, {encoding: 'utf-8'}));
+
+    sources
+      .map(s => VerilogModule.extractFrom(s))
+      .reduce((a, b) => a.concat(b), [])
+      .forEach(m => availableModules.set(m.name, m));
+
+    let specs = [];
+
+    project.components.forEach(cmp => {
+      if (availableModules.has(cmp.moduleName)) {
+        let module = availableModules.get(cmp.moduleName);
+        let bindings: Map<string, string> = new Map(cmp.bindings.map(b => <[string, string]>[b.portName, b.binding]));
+        specs.push({
+          name: cmp.moduleName,
+          ports: module.ports.map(p => bindings.has(p.name) ? bindings.get(p.name) : p.direction)
+        });
+      }
+    });
+
+    return specs;
+  }
+
   async startBuild(project: Project) {
     try {
-      let resp: any = await this.http.post(`http://${this.connectedIp}:8000/start_build`, {project: project.shortPath}).toPromise();
+      let req = {
+        project: project.shortPath,
+        components: await this.getComponentSpecs(project)
+      };
+      let resp: any = await this.http.post(`http://${this.connectedIp}:8000/start_build`, req).toPromise();
       if (resp.error) {
         throw resp.error;
       }
