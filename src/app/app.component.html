@@ -110,7 +110,7 @@
               <i class="wrench icon"></i>Build
             </button>
             <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning && pynq.isBuilding" (click)="goToBuildPage()">
-              <i class="wrench icon"></i>Building
+              <i class="asterisk loading icon"></i>Building
             </button>
             <button class="ui button" *ngIf="pynq.connectionStatus == StatusType.CONNECTED && !pynq.isRunning" (click)="runProject()">
               <i class="play icon"></i>Run

@@ -1,1 +1,74 @@
+<div class="ui card" *ngIf="pynq.isBuilding">
+  <div class="content">
+    <h4><i class="coffee icon"></i> Building your hardware</h4>
+  </div>
+  <div class="content">
+    <p>Sit back and relax. Builds can take a while, so it's a good time for a cup of tea.</p>
+    <sui-progress class="pink active small" [showProgress]="false" [value]="pynq.buildProgress"></sui-progress>
+  </div>
+</div>
+
+<div class="ui card" *ngIf="!pynq.isBuilding && pynq.lastBuildStatus == 'SUCCESS'" #buildSuccess>
+  <div class="content">
+    <h4><i class="green check icon"></i> Hardware last built {{pynq.lastBuildTime | ago}}</h4>
+  </div>
+  <div class="content">
+    <p>The build took {{buildTimeTaken}}.</p>
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th colspan="2">Setup slack</th>
+          <th colspan="2">Hold slack</th>
+        </tr>
+      </thead>
+      <tr>
+        <td>Worst-case timings</td>
+        <td>
+          {{absWNS}} ns <br>
+          <span [ngClass]="WNS >= 0 ? 'positive-slack' : 'negative-slack'">
+            {{WNS >= 0 ? 'of margin to spare' : 'over the limit'}}
+          </span>
+        </td>
+        <td>Worst-case timings</td>
+        <td>
+          {{absWHS}} ns <br>
+          <span [ngClass]="WHS >= 0 ? 'positive-slack' : 'negative-slack'">
+            {{WHS >= 0 ? 'of margin to spare' : 'over the limit'}}
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td>Total negative slack</td>
+        <td>{{TNS}} ns</td>
+        <td>Total hold slack</td>
+        <td>{{THS}} ns</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="ui card" *ngIf="!pynq.isBuilding && pynq.lastBuildStatus == 'ERROR'">
+  <div class="content">
+    <h4><i class="red times icon"></i> The build did not complete</h4>
+  </div>
+  <div class="content" [innerHTML]="pynq.buildReport | nl2br : true">
+  </div>
+</div>
+
+<div class="ui card" *ngIf="!pynq.isBuilding && pynq.lastBuildStatus == 'SYNTHESIS_FAIL'">
+  <div class="content">
+    <h4><i class="red times icon"></i> Hardware synthesis failed</h4>
+  </div>
+  <div class="content" [innerHTML]="pynq.buildReport | nl2br : true">
+  </div>
+</div>
+
+<div class="ui card" *ngIf="!pynq.isBuilding && pynq.lastBuildStatus == 'IMPLEMENTATION_FAIL'">
+  <div class="content">
+    <h4><i class="red times icon"></i> Hardware implementation failed</h4>
+  </div>
+  <div class="content" [innerHTML]="pynq.buildReport | nl2br : true">
+  </div>
+</div>
+
 <textarea #textarea readonly [value]="pynq.logs" (scroll)="onScroll()"></textarea>

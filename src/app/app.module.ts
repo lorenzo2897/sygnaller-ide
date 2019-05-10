@@ -20,6 +20,8 @@ import { FormatMacPipe } from './pipes/format-mac.pipe';
 import { ComponentEditorComponent } from './components/component-editor/component-editor.component';
 import { ComponentBlockComponent } from './components/component-block/component-block.component';
 import { BuildInfoComponent } from './components/build-info/build-info.component';
+import { AgoPipe } from './pipes/ago.pipe';
+import {Nl2BrPipeModule} from 'nl2br-pipe';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { BuildInfoComponent } from './components/build-info/build-info.component
     FormatMacPipe,
     ComponentEditorComponent,
     ComponentBlockComponent,
-    BuildInfoComponent
+    BuildInfoComponent,
+    AgoPipe
   ],
   imports: [
     BrowserModule,
@@ -44,7 +47,8 @@ import { BuildInfoComponent } from './components/build-info/build-info.component
     HttpClientModule,
     NgxElectronModule,
     SuiModule,
-    AceEditorModule
+    AceEditorModule,
+    Nl2BrPipeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

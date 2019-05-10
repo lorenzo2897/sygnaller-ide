@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {Pynq} from '../../classes/Pynq';
 
 @Component({
@@ -12,7 +12,15 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
 
   @Input() pynq: Pynq;
 
-  constructor() { }
+  buildTimeTaken: string = '';
+  TNS: number = 0;
+  WNS: number = 0;
+  absWNS: number = 0;
+  THS: number = 0;
+  WHS: number = 0;
+  absWHS: number = 0;
+
+  constructor(private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
@@ -27,5 +35,30 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
     if (!this.disableAutoScroll) {
       setTimeout(this.textarea.nativeElement.scrollTop = this.textarea.nativeElement.scrollHeight, 20);
     }
+  }
+
+  @ViewChild('buildSuccess') set buildSuccess(element) {
+    if (element) {
+      for (let line of this.pynq.buildReport.split('\n')) {
+        let cols = line.trim().split(',');
+        if (cols.length < 2) continue;
+
+        if (cols[0] == 'ELAPSED') {
+          this.buildTimeTaken = cols[1];
+        } else if (cols[0] == 'TNS') {
+          this.TNS = +cols[1];
+        } else if (cols[0] == 'WNS') {
+          this.WNS = +cols[1];
+          this.absWNS = Math.abs(+cols[1]);
+        } else if (cols[0] == 'THS') {
+          this.THS = +cols[1];
+        } else if (cols[0] == 'WHS') {
+          this.WHS = +cols[1];
+          this.absWHS = Math.abs(+cols[1]);
+        }
+      }
+    }
+
+    this.cdRef.detectChanges();
   }
 }

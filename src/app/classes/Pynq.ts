@@ -37,6 +37,11 @@ export class Pynq {
   // Compilation
   public isBuilding: boolean = false;
   public logs: string = '';
+  public buildProgress: number = 0;
+  public lastBuildTime: number = 0;
+  public lastBuildStatus: string = '';
+  public buildReport: string = '';
+
   get activeProject() {
     return this._activeProject;
   }
@@ -389,8 +394,13 @@ export class Pynq {
       if (resp.error) {
         throw resp.error;
       }
+      console.log(resp);
       this.logs += resp.logs;
       this.isBuilding = resp.running;
+      this.buildProgress = resp.progress;
+      this.lastBuildTime = resp.last_completed;
+      this.lastBuildStatus = resp.last_build_status.trim();
+      this.buildReport = resp.build_report.trim();
     } catch (err) {
       if (err instanceof HttpErrorResponse || err instanceof DOMException) {
         console.log('Connection error', err);
@@ -420,12 +430,15 @@ export class Pynq {
   }
 
   async periodicBuildCheck() {
-    console.log("build check.");
     clearTimeout(this.periodicBuildHandle);
+
     if (this.connectionStatus != ConnectionStatus.CONNECTED) {
+      this.buildProgress = 0;
       return;
     }
+
     if (!this._activeProject) {
+      this.buildProgress = 0;
       return;
     }
 
