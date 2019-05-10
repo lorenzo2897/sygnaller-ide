@@ -8,6 +8,7 @@ import {Pynq} from '../../classes/Pynq';
 })
 export class BuildInfoComponent implements OnInit, AfterViewChecked {
   @ViewChild('textarea') textarea;
+  disableAutoScroll = false;
 
   @Input() pynq: Pynq;
 
@@ -16,7 +17,15 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
   }
 
+  private onScroll() {
+    let el = this.textarea.nativeElement;
+    let isBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
+    this.disableAutoScroll = !isBottom;
+  }
+
   ngAfterViewChecked() {
-    setTimeout(this.textarea.nativeElement.scrollTop = this.textarea.nativeElement.scrollHeight, 20);
+    if (!this.disableAutoScroll) {
+      setTimeout(this.textarea.nativeElement.scrollTop = this.textarea.nativeElement.scrollHeight, 20);
+    }
   }
 }
