@@ -59,6 +59,8 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
       this.buildSuccess();
     } else if (value == 'SYNTHESIS_FAIL') {
       this.buildSynthFail();
+    } else if (value == 'SYNTAX_ERROR') {
+      this.buildSyntaxFail();
     }
   }
 
@@ -109,9 +111,9 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
 
 
   private buildSynthFail() {
-    const sourceError = /ERROR: \[(.*?)\] (.*) \[\/home\/ls2715\/vivado_projects\/.*\/Pynq-Z1\/.*\/([a-zA-Z0-9_]+)_v[0-9]+_[0-9]+_S00_AXI\.v:([0-9]+)\]/g;
-    const fileError = /ERROR: \[(.*?)\] (.*) \[\/home\/ls2715\/vivado_projects\/.*\/Pynq-Z1\/.*\/(.*)\]/g;
-    const miscError = /ERROR: \[(.*?)\] (.*)/g;
+    const sourceError = /ERROR: \[(.*?)\] (.*) \[\/home\/ls2715\/vivado_projects\/.*\/Pynq-Z1\/.*\/([a-zA-Z0-9_]+)_v[0-9]+_[0-9]+_S00_AXI\.v:([0-9]+)\]/;
+    const fileError = /ERROR: \[(.*?)\] (.*) \[\/home\/ls2715\/vivado_projects\/.*\/Pynq-Z1\/.*\/(.*)\]/;
+    const miscError = /ERROR: \[(.*?)\] (.*)/;
 
     this.errorList = [];
     this.pynq.buildReport.split('\n').forEach(line => {
@@ -121,8 +123,8 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
         let moduleName = m[3];
         let wrapperLine = +m[4];
 
-        let sourceFile = '';
-        let sourceLine = 0;
+        let sourceFile = `Auto-generated wrapper for ${moduleName}`;
+        let sourceLine = null;
 
         for (let mapping of this.pynq.sourceMappings) {
           if (wrapperLine >= mapping.start && wrapperLine <= mapping.end) {
@@ -137,7 +139,7 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
           message: m[2],
           file: sourceFile,
           line: sourceLine,
-          link: {category: 'hardware', file: sourceFile}
+          link: sourceLine ? {category: 'hardware', file: sourceFile} : null
         });
 
       } else if ((m = fileError.exec(line))) {
@@ -172,9 +174,77 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
     });
   }
 
+
+  private buildSyntaxFail() {
+    const sourceError = /[A-Z ]+: \[(.*?)\] (.*) \[\/home\/ls2715\/vivado_projects\/.*\/ip\/.*\/([a-zA-Z0-9_]+)_v[0-9]+_[0-9]+_S00_AXI\.v:([0-9]+)\]/;
+    const fileError = /CRITICAL WARNING: \[(.*?)\] (.*) \[\/home\/ls2715\/vivado_projects\/.*\/ip\/.*\/(.*)\]/;
+    const miscError = /([A-Z ]+): \[(.*?)\] (.*)/;
+
+    this.errorList = [];
+    this.pynq.buildReport.split('\n').forEach(line => {
+      let m;
+
+      if ((m = sourceError.exec(line))) {
+        let moduleName = m[3];
+        let wrapperLine = +m[4];
+
+        let sourceFile = `Auto-generated wrapper for ${moduleName}`;
+        let sourceLine = null;
+
+        for (let mapping of this.pynq.sourceMappings) {
+          if (wrapperLine >= mapping.start && wrapperLine <= mapping.end) {
+            sourceFile = mapping.file;
+            sourceLine = wrapperLine - mapping.start + 1;
+            break;
+          }
+        }
+
+        this.errorList.push({
+          id: m[1],
+          message: m[2],
+          file: sourceFile,
+          line: sourceLine,
+          link: sourceLine ? {category: 'hardware', file: sourceFile} : null
+        });
+
+      } else if ((m = fileError.exec(line))) {
+        this.errorList.push({
+          id: m[1],
+          message: m[2],
+          file: m[3],
+          line: null,
+          link: null
+        });
+
+      } else if ((m = miscError.exec(line))) {
+        if (m[1] == "WARNING") return;
+        if (!line.includes('please see the console or run log file for details')) {
+          this.errorList.push({
+            id: m[2],
+            message: m[3],
+            file: null,
+            line: null,
+            link: null
+          });
+        }
+
+      } else {
+        this.errorList.push({
+          id: null,
+          message: line,
+          file: null,
+          line: null,
+          link: null
+        });
+      }
+    });
+  }
+
+
   onFileClick(link: SidebarSelection) {
     if (link) this.linkClicked.emit(link);
   }
+
 
   onStopBuild() {
     this.stopBuild.emit();

@@ -14,6 +14,7 @@
   cursor: default;
   user-select: none;
   flex-shrink: 0;
+  overflow-x: auto;
 }
 
 td {
@@ -49,7 +50,7 @@ textarea {
 }
 
 h3 {
-  margin-left: 5%;
+  margin-left: 8px;
 }
 
 .error-id {
