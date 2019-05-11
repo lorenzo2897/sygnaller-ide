@@ -4,7 +4,7 @@
   </div>
   <div class="content">
     <p>Sit back and relax. Builds can take a while, so it's a good time for a cup of tea.</p>
-    <sui-progress class="pink active small" [showProgress]="false" [value]="pynq.buildProgress"></sui-progress>
+    <sui-progress class="build-progress pink active small" [showProgress]="false" [value]="pynq.buildProgress"></sui-progress>
   </div>
 </div>
 
@@ -44,6 +44,28 @@
         <td>{{THS}} ns</td>
       </tr>
     </table>
+
+    <table class="ui celled table">
+      <thead>
+        <tr>
+          <th colspan="4">Resource utilisation</th>
+        </tr>
+      </thead>
+      <tr>
+        <td>
+          <sui-progress class="pink small" [value]="usageLUTs.percent">Logic elements</sui-progress>
+        </td>
+        <td>
+          <sui-progress class="pink small" [value]="usageRegs.percent">Registers</sui-progress>
+        </td>
+        <td>
+          <sui-progress class="pink small" [value]="usageRAM.percent">Block RAM</sui-progress>
+        </td>
+        <td>
+          <sui-progress class="pink small" [value]="usageDSP.percent">DSP</sui-progress>
+        </td>
+      </tr>
+    </table>
   </div>
 </div>
 
@@ -71,4 +93,5 @@
   </div>
 </div>
 
+<h3>Build logs</h3>
 <textarea #textarea readonly [value]="pynq.logs" (scroll)="onScroll()"></textarea>

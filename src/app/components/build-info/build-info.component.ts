@@ -19,6 +19,10 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
   THS: number = 0;
   WHS: number = 0;
   absWHS: number = 0;
+  usageLUTs = {used: 0, total: 0, percent: 0};
+  usageRegs = {used: 0, total: 0, percent: 0};
+  usageRAM = {used: 0, total: 0, percent: 0};
+  usageDSP = {used: 0, total: 0, percent: 0};
 
   constructor(private cdRef: ChangeDetectorRef) { }
 
@@ -55,6 +59,30 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
         } else if (cols[0] == 'WHS') {
           this.WHS = +cols[1];
           this.absWHS = Math.abs(+cols[1]);
+        } else if (cols[0] == 'LUT') {
+          this.usageLUTs = {
+            used: +cols[1],
+            total: +cols[2],
+            percent: +cols[3]
+          }
+        } else if (cols[0] == 'REGISTERS') {
+          this.usageRegs = {
+            used: +cols[1],
+            total: +cols[2],
+            percent: +cols[3]
+          }
+        } else if (cols[0] == 'BRAM') {
+          this.usageRAM = {
+            used: +cols[1],
+            total: +cols[2],
+            percent: +cols[3]
+          }
+        } else if (cols[0] == 'DSP') {
+          this.usageDSP = {
+            used: +cols[1],
+            total: +cols[2],
+            percent: +cols[3]
+          }
         }
       }
     }

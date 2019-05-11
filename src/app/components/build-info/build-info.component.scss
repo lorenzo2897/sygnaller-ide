@@ -2,6 +2,7 @@
 :host {
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .card {
@@ -12,9 +13,14 @@
   background: rgba(255, 255, 255, 0.76);
   cursor: default;
   user-select: none;
+  flex-shrink: 0;
 }
 
-sui-progress {
+td {
+  user-select: text;
+}
+
+.build-progress {
   margin-top: 12px !important;
   margin-bottom: 0 !important;
 }
@@ -28,6 +34,7 @@ textarea {
   flex: 1;
   font-family: "Monaco", "Consolas", monospace;
   color: inherit;
+  min-height: 150px;
 }
 
 .positive-slack {
@@ -35,4 +42,8 @@ textarea {
 }
 .negative-sack {
   color: red;
+}
+
+h3 {
+  margin-left: 5%;
 }
