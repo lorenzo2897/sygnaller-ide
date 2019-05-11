@@ -252,11 +252,11 @@ export class AppComponent {
     this.pynq.disconnect();
   }
 
-  async runProject() {
+  async runProject(target='software/main.py') {
     try {
       this.saveFile();
       await this.pynq.uploadFiles(this.project, p => this.progressBar = p);
-      await this.pynq.startRunning(this.project);
+      await this.pynq.startRunning(this.project, target);
       this.activeSelection = {category: 'tools', file: 'terminal'};
       this.selectionChanged(this.activeSelection);
       this.progressBar = null;

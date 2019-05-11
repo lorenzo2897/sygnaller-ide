@@ -142,6 +142,7 @@
       [project]="project"
       [(selection)]="activeSelection"
       (selectionChange)="selectionChanged($event)"
+      (runPythonFile)="runProject($event)"
       [darkTheme]="darkTheme"
       [showTools]="pynq.connectionStatus == StatusType.CONNECTED">
     </app-sidebar>

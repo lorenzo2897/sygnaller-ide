@@ -20,6 +20,8 @@ export class SidebarComponent implements AfterViewInit {
   @Input() selection: SidebarSelection = null;
   @Output() selectionChange: EventEmitter<SidebarSelection> = new EventEmitter<SidebarSelection>();
 
+  @Output() runPythonFile: EventEmitter<string> = new EventEmitter<string>();
+
   tools = [
     {id: 'build', label: 'Build info', icon: 'info circle olive', runOnly: false},
     {id: 'terminal', label: 'Terminal', icon: 'terminal olive', runOnly: false},
@@ -99,7 +101,7 @@ export class SidebarComponent implements AfterViewInit {
   }
 
   showContextMenu(category: string, path: string) {
-    let menu = this.electron.remote.Menu.buildFromTemplate([
+    let menuOptions = [
       {
         label: 'Rename',
         click: () => this.renameFile(category, path)
@@ -108,7 +110,14 @@ export class SidebarComponent implements AfterViewInit {
         label: 'Delete',
         click: () => this.deleteFile(category, path)
       }
-    ]);
+    ];
+    if (category == 'software' && path.endsWith('.py')) {
+      menuOptions.push({
+        label: 'Run as main',
+        click: () => this.runAsMain(category, path)
+      });
+    }
+    let menu = this.electron.remote.Menu.buildFromTemplate(menuOptions);
     menu.popup();
   }
 
@@ -155,5 +164,9 @@ export class SidebarComponent implements AfterViewInit {
     }
 
     this.electron.remote.require('fs').unlinkSync(this.deleteModal_fullPath);
+  }
+
+  runAsMain(category, path) {
+    this.runPythonFile.emit(category + '/' + path)
   }
 }

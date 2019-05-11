@@ -280,13 +280,13 @@ export class Pynq {
     this.lastUploadTimes.set(project.shortPath, Date.now());
   }
 
-  async startRunning(project: Project) {
+  async startRunning(project: Project, target='software/main.py') {
     if (!project.hasMainPy()) {
       throw 'Your project must include a main.py file, which will be started when you click the Run button.';
     }
     let runOptions = {
       project: project.shortPath,
-      target: 'software/main.py'
+      target: target
     };
     try {
       let resp: any = await this.http.post(`http://${this.connectedIp}:8000/run_python`, runOptions).toPromise();
