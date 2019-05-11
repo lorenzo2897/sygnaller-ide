@@ -289,7 +289,11 @@ export class AppComponent {
   }
 
   async stopBuilding() {
-
+    try {
+      await this.pynq.stopBuild(this.project);
+    } catch (err) {
+      this.alert('Error', err);
+    }
   }
 
   goToBuildPage() {

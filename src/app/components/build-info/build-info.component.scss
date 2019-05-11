@@ -25,6 +25,10 @@ td {
   margin-bottom: 0 !important;
 }
 
+.build-report {
+  user-select: text;
+}
+
 textarea {
   border: none;
   background-color: transparent;
@@ -46,4 +50,20 @@ textarea {
 
 h3 {
   margin-left: 5%;
+}
+
+.error-id {
+  opacity: 0.5;
+}
+.error-file {
+  font-weight: bold;
+}
+.error-link {
+  cursor: pointer;
+}
+.error-link:hover {
+  text-decoration: underline;
+}
+.error-line {
+  color: #2d5096;
 }

@@ -181,7 +181,10 @@
   <app-build-info
     class="main-content"
     *ngIf="project != null && activeSelection?.category == 'tools' && activeSelection?.file == 'build'"
-    [pynq]="pynq">
+    [pynq]="pynq"
+    [lastBuildStatus]="pynq.lastBuildStatus"
+    (linkClicked)="activeSelection = $event; selectionChanged($event)"
+    (stopBuild)="stopBuilding()">
   </app-build-info>
 </div>
 

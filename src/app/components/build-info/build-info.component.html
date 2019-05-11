@@ -1,14 +1,24 @@
 <div class="ui card" *ngIf="pynq.isBuilding">
   <div class="content">
-    <h4><i class="coffee icon"></i> Building your hardware</h4>
+    <h4><i class="coffee icon"></i>
+      Building your hardware
+      <span class="ui red basic mini button" style="float: right;" (click)="onStopBuild()">
+        <i class="red times icon"></i>
+        Stop
+      </span>
+    </h4>
   </div>
   <div class="content">
     <p>Sit back and relax. Builds can take a while, so it's a good time for a cup of tea.</p>
-    <sui-progress class="build-progress pink active small" [showProgress]="false" [value]="pynq.buildProgress"></sui-progress>
+    <sui-progress class="build-progress active small"
+                  [showProgress]="false"
+                  [ngClass]="pynq.connectionStatus == PynqStatus.CONNECTED ? 'pink' : 'disabled'"
+                  [value]="pynq.buildProgress">
+    </sui-progress>
   </div>
 </div>
 
-<div class="ui card" *ngIf="!pynq.isBuilding && pynq.lastBuildStatus == 'SUCCESS'" #buildSuccess>
+<div class="ui card" *ngIf="!pynq.isBuilding && _lastBuildStatus == 'SUCCESS'">
   <div class="content">
     <h4><i class="green check icon"></i> Hardware last built {{pynq.lastBuildTime | ago}}</h4>
   </div>
@@ -69,27 +79,34 @@
   </div>
 </div>
 
-<div class="ui card" *ngIf="!pynq.isBuilding && pynq.lastBuildStatus == 'ERROR'">
+<div class="ui card" *ngIf="!pynq.isBuilding && _lastBuildStatus == 'ERROR'">
   <div class="content">
     <h4><i class="red times icon"></i> The build did not complete</h4>
   </div>
-  <div class="content" [innerHTML]="pynq.buildReport | nl2br : true">
+  <div class="content build-report" [innerHTML]="pynq.buildReport | nl2br : true">
   </div>
 </div>
 
-<div class="ui card" *ngIf="!pynq.isBuilding && pynq.lastBuildStatus == 'SYNTHESIS_FAIL'">
+<div class="ui card" *ngIf="!pynq.isBuilding && _lastBuildStatus == 'SYNTHESIS_FAIL'">
   <div class="content">
     <h4><i class="red times icon"></i> Hardware synthesis failed</h4>
   </div>
-  <div class="content" [innerHTML]="pynq.buildReport | nl2br : true">
+  <div class="content build-report">
+    <p *ngFor="let err of errorList">
+      <span *ngIf="err.id" class="error-id">{{err.id}}: </span>
+      <span *ngIf="err.message" class="error-message">{{err.message}}</span>
+      <span *ngIf="err.file" class="error-file" [ngClass]="err.link ? 'error-link' : ''" (click)="onFileClick(err.link)">
+        [{{err.file}}<span *ngIf="err.line" class="error-line">:{{err.line}}</span>]
+      </span>
+    </p>
   </div>
 </div>
 
-<div class="ui card" *ngIf="!pynq.isBuilding && pynq.lastBuildStatus == 'IMPLEMENTATION_FAIL'">
+<div class="ui card" *ngIf="!pynq.isBuilding && _lastBuildStatus == 'IMPLEMENTATION_FAIL'">
   <div class="content">
     <h4><i class="red times icon"></i> Hardware implementation failed</h4>
   </div>
-  <div class="content" [innerHTML]="pynq.buildReport | nl2br : true">
+  <div class="content build-report" [innerHTML]="pynq.buildReport | nl2br : true">
   </div>
 </div>
 

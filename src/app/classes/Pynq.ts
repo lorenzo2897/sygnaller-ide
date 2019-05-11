@@ -41,6 +41,7 @@ export class Pynq {
   public lastBuildTime: number = 0;
   public lastBuildStatus: string = '';
   public buildReport: string = '';
+  public sourceMappings = [];
 
   get activeProject() {
     return this._activeProject;
@@ -219,9 +220,6 @@ export class Pynq {
       const lastModified = Math.round(fs.statSync(filename).mtimeMs);
       return lastModified > this.lastUploadTimes.get(project.shortPath);
     };
-    softwareFiles = softwareFiles.filter(f => modified(f));
-    hardwareFiles = hardwareFiles.filter(f => modified(f));
-    dataFiles = dataFiles.filter(f => modified(f));
 
     // count progress
     const totalFiles = softwareFiles.length + hardwareFiles.length + dataFiles.length;
@@ -238,18 +236,19 @@ export class Pynq {
         });
       })
     };
-    const sendFiles = async (files: string[]) => {
+    const sendFiles = async (directory: string, files: string[]) => {
       let filesArray = [];
 
       for (let f of files) {
         filesArray.push({
           path: nodePath.relative(project.path, f),
-          contents: await readToBase64(f)
+          contents: modified(f) ? await readToBase64(f) : null
         });
       }
 
       let requestContents = {
         project: project.shortPath,
+        directory: directory,
         files: filesArray
       };
 
@@ -269,13 +268,13 @@ export class Pynq {
       }
     };
 
-    await sendFiles(softwareFiles);
+    await sendFiles('software', softwareFiles);
     callback(softwareFiles.length * 100 / totalFiles);
 
-    await sendFiles(hardwareFiles);
+    await sendFiles('hardware', hardwareFiles);
     callback((softwareFiles.length + hardwareFiles.length) * 100 / totalFiles);
 
-    await sendFiles(dataFiles);
+    await sendFiles('data', dataFiles);
     callback(100);
 
     this.lastUploadTimes.set(project.shortPath, Date.now());
@@ -300,7 +299,7 @@ export class Pynq {
     } catch (err) {
       if (err instanceof HttpErrorResponse || err instanceof DOMException) {
         console.log('Connection error', err);
-        throw 'Lost connection to the device while uploading source files.';
+        throw 'The device is not responding. Check your connections and try again.';
       } else {
         console.log('Unknown error', err);
         throw err;
@@ -317,7 +316,7 @@ export class Pynq {
     } catch (err) {
       if (err instanceof HttpErrorResponse || err instanceof DOMException) {
         console.log('Connection error', err);
-        throw 'Lost connection to the device while uploading source files.';
+        throw 'The device is not responding. Check your connections and try again.';
       } else {
         console.log('Unknown error', err);
         throw err;
@@ -380,7 +379,27 @@ export class Pynq {
     } catch (err) {
       if (err instanceof HttpErrorResponse || err instanceof DOMException) {
         console.log('Connection error', err);
-        throw 'Lost connection to the device while uploading source files.';
+        throw 'The device is not responding. Check your connections and try again.';
+      } else {
+        console.log('Unknown error', err);
+        throw err;
+      }
+    }
+  }
+
+  async stopBuild(project: Project) {
+    try {
+      let req = {
+        project: project.shortPath
+      };
+      let resp: any = await this.http.post(`http://${this.connectedIp}:8000/stop_build`, req).toPromise();
+      if (resp.error) {
+        throw resp.error;
+      }
+    } catch (err) {
+      if (err instanceof HttpErrorResponse || err instanceof DOMException) {
+        console.log('Connection error', err);
+        throw 'Lost connection to the device.';
       } else {
         console.log('Unknown error', err);
         throw err;
@@ -394,17 +413,18 @@ export class Pynq {
       if (resp.error) {
         throw resp.error;
       }
-      console.log(resp);
+      //console.log(resp);
       this.logs += resp.logs;
       this.isBuilding = resp.running;
       this.buildProgress = resp.progress;
       this.lastBuildTime = resp.last_completed;
       this.lastBuildStatus = resp.last_build_status.trim();
       this.buildReport = resp.build_report.trim();
+      this.sourceMappings = resp.source_mappings;
     } catch (err) {
       if (err instanceof HttpErrorResponse || err instanceof DOMException) {
         console.log('Connection error', err);
-        throw 'Lost connection to the device while uploading source files.';
+        throw 'The device is not responding. Check your connections and try again.';
       } else {
         console.log('Unknown error', err);
         throw err;
@@ -421,7 +441,7 @@ export class Pynq {
     } catch (err) {
       if (err instanceof HttpErrorResponse || err instanceof DOMException) {
         console.log('Connection error', err);
-        throw 'Lost connection to the device while uploading source files.';
+        throw 'The device is not responding. Check your connections and try again.';
       } else {
         console.log('Unknown error', err);
         throw err;
