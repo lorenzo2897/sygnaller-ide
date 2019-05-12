@@ -1,4 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {AceEditorComponent} from 'ng2-ace-editor';
 
 @Component({
   selector: 'app-code-editor',
@@ -32,6 +33,7 @@ export class CodeEditorComponent implements AfterViewInit {
     }
     this.editorOptions = newOptions;
     this.editor.getEditor().focus();
+    this.editor.getEditor().getSession().setUndoManager(new window['ace'].UndoManager());
     this.editor.getEditor().selection.moveTo(0, 0);
   }
 
