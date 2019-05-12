@@ -356,7 +356,12 @@ export class Pynq {
         let bindings: Map<string, string> = new Map(cmp.bindings.map(b => <[string, string]>[b.portName, b.binding]));
         specs.push({
           name: cmp.moduleName,
-          ports: module.ports.map(p => bindings.has(p.name) ? bindings.get(p.name) : p.direction)
+          ports: module.ports.map(p => {
+            return {
+              name: p.name,
+              type: bindings.has(p.name) ? bindings.get(p.name) : p.direction
+            }
+          })
         });
       }
     });
