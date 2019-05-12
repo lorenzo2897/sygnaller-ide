@@ -4,7 +4,7 @@
   <div></div>
 
   <table>
-    <tr *ngFor="let p of inputPorts">
+    <tr class="r" *ngFor="let p of inputPorts">
       <td class="r binding ui pointing dropdown" suiDropdown>
         {{_bindingsMap.get(p.name) ? _bindingsMap.get(p.name): 'data in'}}
         <div class="menu" suiDropdownMenu>
