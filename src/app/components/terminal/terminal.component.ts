@@ -7,10 +7,10 @@ interface TerminalOutput {
 }
 
 enum OutputType {
-  StdIn,
-  StdOut,
-  StdErr,
-  Image
+  StdIn = 0,
+  StdOut = 1,
+  StdErr = 2,
+  Image = 3
 }
 
 @Component({
@@ -117,9 +117,7 @@ export class TerminalComponent {
       let input = this.stdin == '' ? null : this.stdin;
       this.stdin = '';
       let response = await this.pynq.terminal(input);
-      response.stdout.forEach(line => this.stdout.push({t: OutputType.StdOut, v: line}));
-      response.images.forEach(line => this.stdout.push({t: OutputType.Image, v: line}));
-      response.stderr.forEach(line => this.stdout.push({t: OutputType.StdErr, v: line}));
+      response.output.forEach(line => this.stdout.push({t: line[0], v: line[1]}));
       this.scrollToBottom();
 
       if (response.running) {
