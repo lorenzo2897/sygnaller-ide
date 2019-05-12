@@ -136,6 +136,17 @@ export class SidebarComponent implements AfterViewInit {
   }
 
   renameFileResult(newName) {
+    let fileIsCurrentlySelected = false;
+    if (this.selection) {
+      let selected = this.electron.remote.require('path').resolve(this.project.path, this.selection.category, this.selection.file);
+      fileIsCurrentlySelected = (this.renameModal_oldPath == selected);
+    }
+
+    if (fileIsCurrentlySelected) {
+      this.selection = null;
+      this.selectionChange.emit(this.selection);
+    }
+
     let newFullPath = this.electron.remote.require('path').resolve(this.renameModal_dirname, newName);
     this.electron.remote.require('fs').renameSync(this.renameModal_oldPath, newFullPath);
   }

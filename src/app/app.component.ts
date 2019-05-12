@@ -109,6 +109,8 @@ export class AppComponent {
   }
 
   selectionChanged(selection: SidebarSelection) {
+    if (!this.saveFile()) return; // ensure we save before moving away!
+
     if (!selection) {
       this.editorFilename = null;
       this.editorOriginalContents = '';
@@ -116,7 +118,6 @@ export class AppComponent {
       return;
     }
 
-    if (!this.saveFile()) return; // ensure we save before moving away!
     console.log('Selection changed:', selection.category, '/', selection.file);
 
     let isText = (s: SidebarSelection) => {
