@@ -1,10 +1,10 @@
 import {Component, HostListener, NgZone, ViewChild} from '@angular/core';
-import { ElectronService } from 'ngx-electron';
+import {ElectronService} from 'ngx-electron';
 import {Project} from './classes/Project';
 import {Workspace} from './classes/Workspace';
 import {Title} from '@angular/platform-browser';
 import {SidebarSelection} from './components/sidebar/sidebar.component';
-import {Pynq, ConnectionStatus} from './classes/Pynq';
+import {ConnectionStatus, Pynq} from './classes/Pynq';
 import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-ui';
 
 
@@ -253,6 +253,12 @@ export class AppComponent {
   }
 
   async runProject(target='software/main.py') {
+    if (this.pynq.connectionStatus != ConnectionStatus.CONNECTED) {
+      this.ngZone.run(() => {
+        return this.alert('Board not connected', 'You must connect to a Pynq board to run your projects.');
+      });
+      return;
+    }
     try {
       this.saveFile();
       await this.pynq.uploadFiles(this.project, p => this.progressBar = p);

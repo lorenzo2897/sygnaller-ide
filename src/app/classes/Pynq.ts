@@ -281,7 +281,7 @@ export class Pynq {
   }
 
   async startRunning(project: Project, target='software/main.py') {
-    if (!project.hasMainPy()) {
+    if (target == 'software/main.py' && !project.hasMainPy()) {
       throw 'Your project must include a main.py file, which will be started when you click the Run button.';
     }
     let runOptions = {

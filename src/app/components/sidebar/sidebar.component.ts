@@ -112,8 +112,8 @@ export class SidebarComponent implements AfterViewInit {
       }
     ];
     if (category == 'software' && path.endsWith('.py')) {
-      menuOptions.push({
-        label: 'Run as main',
+      menuOptions.unshift({
+        label: `Run ${path}`,
         click: () => this.runAsMain(category, path)
       });
     }
@@ -167,6 +167,8 @@ export class SidebarComponent implements AfterViewInit {
   }
 
   runAsMain(category, path) {
-    this.runPythonFile.emit(category + '/' + path)
+    this.ngZone.run(() => {
+      this.runPythonFile.emit(category + '/' + path)
+    });
   }
 }
