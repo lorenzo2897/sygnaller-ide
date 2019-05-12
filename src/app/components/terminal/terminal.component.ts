@@ -1,12 +1,25 @@
 import {Component, ElementRef, HostBinding, Input, ViewChild} from '@angular/core';
 import {ConnectionStatus, Pynq} from '../../classes/Pynq';
 
+interface TerminalOutput {
+  t: OutputType,
+  v: string
+}
+
+enum OutputType {
+  StdIn,
+  StdOut,
+  StdErr,
+  Image
+}
+
 @Component({
   selector: 'app-terminal',
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss']
 })
 export class TerminalComponent {
+  OutputType = OutputType;
   @ViewChild('cmdline') cmdline: ElementRef;
 
   @Input() pynq: Pynq;
@@ -19,8 +32,7 @@ export class TerminalComponent {
   historyLevel: number = 0;
 
   stdin: string = '';
-  stdout: string[] = [];
-  stderr: string[] = [];
+  stdout: TerminalOutput[] = [];
   remoteTerminalJob = null;
 
   constructor(private element: ElementRef) { }
@@ -41,8 +53,7 @@ export class TerminalComponent {
   @Input() set running(value: boolean) {
     if (value == true) {
       this.stdin = '';
-      this.stdout = ['Python program started.'];
-      this.stderr = [];
+      this.stdout = [{t: OutputType.StdErr, v: 'Python program starting.'}];
       clearTimeout(this.remoteTerminalJob);
       if (this._show) this.remoteTerminal();
     }
@@ -90,12 +101,12 @@ export class TerminalComponent {
   }
 
   addOutput(text: string) {
-    this.stdout.push(text);
+    this.stdout.push({t: OutputType.StdIn, v: text});
     this.scrollToBottom();
   }
 
   addError(text: string) {
-    this.stderr.push(text);
+    this.stdout.push({t: OutputType.StdErr, v: text});
     this.scrollToBottom();
   }
 
@@ -106,8 +117,9 @@ export class TerminalComponent {
       let input = this.stdin == '' ? null : this.stdin;
       this.stdin = '';
       let response = await this.pynq.terminal(input);
-      response.stdout.forEach(line => this.stdout.push(line));
-      response.stderr.forEach(line => this.stderr.push(line));
+      response.stdout.forEach(line => this.stdout.push({t: OutputType.StdOut, v: line}));
+      response.images.forEach(line => this.stdout.push({t: OutputType.Image, v: line}));
+      response.stderr.forEach(line => this.stdout.push({t: OutputType.StdErr, v: line}));
       this.scrollToBottom();
 
       if (response.running) {

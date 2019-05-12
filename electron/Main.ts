@@ -33,7 +33,8 @@ export default class Main {
             minHeight: 200,
             backgroundColor: '#313131',
             webPreferences: {
-              nodeIntegration: true
+              nodeIntegration: true,
+              webSecurity: false
             }
         });
 

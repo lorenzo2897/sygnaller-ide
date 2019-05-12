@@ -187,6 +187,11 @@
     (linkClicked)="activeSelection = $event; selectionChanged($event)"
     (stopBuild)="stopBuilding()">
   </app-build-info>
+
+  <div class="main-content image-preview"
+       *ngIf="imageViewerPath">
+    <img [src]="imageViewerPath" />
+  </div>
 </div>
 
 <div class="status-bar" [ngClass]="darkTheme ? 'dark' : ''">

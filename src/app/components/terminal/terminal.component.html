@@ -1,7 +1,11 @@
 <div id="container" *ngIf="_show" [ngClass]="darkTheme ? 'dark' : ''">
   <br>
-  <pre class="output" *ngFor="let line of stdout">{{line}}</pre>
-  <pre class="output error" *ngFor="let line of stderr">{{line}}</pre>
+  <div *ngFor="let line of stdout">
+    <pre class="stdin" *ngIf="line.t == OutputType.StdIn">{{line.v}}</pre>
+    <pre class="output" *ngIf="line.t == OutputType.StdOut">{{line.v}}</pre>
+    <pre class="output error" *ngIf="line.t == OutputType.StdErr">{{line.v}}</pre>
+    <img class="output-image" *ngIf="line.t == OutputType.Image" [src]="line.v | dataUri"/>
+  </div>
   <div id="input-line" class="input-line">
     <div class="prompt">&gt;&gt;&gt;</div>
     <div><input #cmdline class="cmdline" (keydown)="commandLineKey($event)" /></div>

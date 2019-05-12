@@ -22,6 +22,7 @@ import { ComponentBlockComponent } from './components/component-block/component-
 import { BuildInfoComponent } from './components/build-info/build-info.component';
 import { AgoPipe } from './pipes/ago.pipe';
 import {Nl2BrPipeModule} from 'nl2br-pipe';
+import { DataUriPipe } from './pipes/data-uri.pipe';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {Nl2BrPipeModule} from 'nl2br-pipe';
     ComponentEditorComponent,
     ComponentBlockComponent,
     BuildInfoComponent,
-    AgoPipe
+    AgoPipe,
+    DataUriPipe
   ],
   imports: [
     BrowserModule,

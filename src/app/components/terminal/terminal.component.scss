@@ -20,18 +20,31 @@
   color: white;
 }
 
-.output {
+.output, .stdin {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-family: Consolas, Inconsolata, monospace;
   margin: 0;
 }
 
-#container > .output.error {
+#container .stdin {
+  color: #203d1f;
+}
+#container.dark .stdin {
+  color: #96b38a;
+}
+
+#container .output.error {
   color: darkred;
 }
-#container.dark > .output.error {
+#container.dark .output.error {
   color: lightcoral;
+}
+
+.output-image {
+  margin: 4px;
+  max-width: 90%;
+  max-height: 300px;
 }
 
 .input-line {

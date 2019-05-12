@@ -23,6 +23,7 @@ export class AppComponent {
   editorFilename: string = null;
   editorOriginalContents: string = '';
   editorContents: string = '';
+  imageViewerPath: string = null;
 
   openModal_newProject = false;
   openModal_newFile = false;
@@ -111,45 +112,58 @@ export class AppComponent {
   selectionChanged(selection: SidebarSelection) {
     if (!this.saveFile()) return; // ensure we save before moving away!
 
-    if (!selection) {
-      this.editorFilename = null;
-      this.editorOriginalContents = '';
-      this.editorContents = '';
-      return;
-    }
-
-    console.log('Selection changed:', selection.category, '/', selection.file);
-
-    let isText = (s: SidebarSelection) => {
-      if (s.category == 'tools') return false;
-      if (s.category == 'software') return true;
-      if (s.category == 'hardware') return true;
-
-      let allowedExtensions = ['txt', 'csv', 'py', 'v', 'md'];
-      for(let ext of allowedExtensions) {
-        if (s.file.toLowerCase().endsWith('.' + ext)) return true;
+    this.ngZone.run(() => {
+      if (!selection) {
+        this.editorFilename = null;
+        this.editorOriginalContents = '';
+        this.editorContents = '';
+        this.imageViewerPath = null;
+        return;
       }
-    };
 
-    if (isText(selection)) {
-      // read file into editor
-      let fullPath = this.electron.remote.require('path').resolve(this.project.path, selection.category, selection.file);
-      this.electron.remote.require('fs').readFile(fullPath, 'utf-8', (err, data) => this.ngZone.run(() => {
-        if (!err) {
-          this.editorContents = data;
-          this.editorOriginalContents = this.editorContents;
-          setTimeout(() =>
-          this.editorFilename = this.electron.remote.require('path').join(selection.category, selection.file)
-          , 0);
-        } else {
-          this.editorContents = '';
-          this.editorFilename = '';
+      console.log('Selection changed:', selection.category, '/', selection.file);
+
+      let isText = (s: SidebarSelection) => {
+        if (s.category == 'tools') return false;
+        if (s.category == 'software') return true;
+        if (s.category == 'hardware') return true;
+
+        let allowedExtensions = ['txt', 'csv', 'py', 'v', 'md'];
+        for(let ext of allowedExtensions) {
+          if (s.file.toLowerCase().endsWith('.' + ext)) return true;
         }
-      }));
-    } else {
-      // hide the editor
+      };
+
+      let isImage = (s: SidebarSelection) => {
+        if (s.category != 'data') return false;
+        let allowedExtensions = ['png', 'jpg', 'jpeg', 'gif', 'bmp'];
+        for(let ext of allowedExtensions) {
+          if (s.file.toLowerCase().endsWith('.' + ext)) return true;
+        }
+      };
+
       this.editorFilename = null;
-    }
+      this.imageViewerPath = null;
+
+      if (isText(selection)) {
+        // read file into editor
+        let fullPath = this.electron.remote.require('path').resolve(this.project.path, selection.category, selection.file);
+        this.electron.remote.require('fs').readFile(fullPath, 'utf-8', (err, data) => this.ngZone.run(() => {
+          if (!err) {
+            this.editorContents = data;
+            this.editorOriginalContents = this.editorContents;
+            setTimeout(() =>
+                this.editorFilename = this.electron.remote.require('path').join(selection.category, selection.file)
+              , 0);
+          } else {
+            this.editorContents = '';
+            this.editorFilename = '';
+          }
+        }));
+      } else if(isImage(selection)) {
+        this.imageViewerPath = 'file://' + this.electron.remote.require('path').resolve(this.project.path, selection.category, selection.file);
+      }
+    });
   }
 
   saveFile() {
