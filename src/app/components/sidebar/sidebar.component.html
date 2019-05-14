@@ -10,6 +10,7 @@
 </div>
 <h4 class="ui">Software files</h4>
 <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
+  <p class="item no-files" *ngIf="softwareFiles.length == 0">No software files yet</p>
   <a class="item"
      *ngFor="let f of softwareFiles"
      [ngClass]="selection?.category == 'software' && selection?.file == f ? 'active' : ''"
@@ -27,6 +28,7 @@
     <i class="icon pink left sitemap"></i>
     Component designer
   </a>
+  <p class="item no-files" *ngIf="hardwareFiles.length == 0">No hardware files yet</p>
   <a class="item"
      *ngFor="let f of hardwareFiles"
      [ngClass]="selection?.category == 'hardware' && selection?.file == f ? 'active' : ''"
@@ -38,6 +40,7 @@
 </div>
 <h4 class="ui">Data files</h4>
 <div class="ui secondary fluid vertical menu" [ngClass]="darkTheme ? 'inverted' : ''">
+  <p class="item no-files" *ngIf="dataFiles.length == 0">No data files yet</p>
   <a class="item"
      *ngFor="let f of dataFiles"
      [ngClass]="selection?.category == 'data' && selection?.file == f ? 'active' : ''"

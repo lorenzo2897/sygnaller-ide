@@ -329,7 +329,7 @@ export class AppComponent {
   async buildProject() {
     if (this.project == null || this.pynq.connectionStatus != ConnectionStatus.CONNECTED) {
       this.ngZone.run(() => {
-        return this.alert('Board not connected', 'You must connect to a Pynq board to run your projects.');
+        return this.alert('Board not connected', 'You must connect to a Pynq board to build your projects.');
       });
       return;
     }
@@ -362,7 +362,7 @@ export class AppComponent {
   clearBuildCache() {
     if (this.project == null || this.pynq.connectionStatus != ConnectionStatus.CONNECTED) {
       this.ngZone.run(() => {
-        return this.alert('Board not connected', 'You must connect to a Pynq board to run your projects.');
+        return this.alert('Board not connected', 'You must connect to a Pynq board to manage the cache.');
       });
       return;
     }

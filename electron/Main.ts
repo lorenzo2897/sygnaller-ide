@@ -164,7 +164,12 @@ export default class Main {
             {type: 'separator'},
             {role: 'quit'}
           ]
-        })
+        });
+        template.push({
+          role: 'help',
+          submenu: [
+          ]
+        });
       } else {
         template.unshift({
           label: 'Sygnaller',
