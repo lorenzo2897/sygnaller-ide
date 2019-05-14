@@ -58,17 +58,6 @@
             </button>
           </div>
         </div>
-
-        <div class="item">
-          <button class="ui button" (click)="closeProject()">Close project</button>
-        </div>
-
-        <div class="item">
-          <div class="ui buttons">
-            <button class="ui button" (click)="setDarkMode(false)">Light</button>
-            <button class="ui button" (click)="setDarkMode(true)">Dark</button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -237,3 +226,10 @@
   (close)="openModal_newConnection = false"
   (connect)="connectPynq($event.mac, $event.ip)">
 </app-new-connection-modal>
+
+<app-rename-project-modal
+  [open]="openModal_renameProject"
+  (close)="openModal_renameProject = false"
+  [projectName]="project?.name"
+  (renameProject)="renameProject($event)">
+</app-rename-project-modal>

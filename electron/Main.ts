@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, MenuItemConstructorOptions, Menu } from 'electron';
 import * as path from "path";
 import * as url from "url";
 
@@ -18,7 +18,8 @@ export default class Main {
     }
 
     private static onReady() {
-        Main.createWindow();
+      Main.createApplicationMenu();
+      Main.createWindow();
     }
 
     private static onActivate() {
@@ -50,6 +51,135 @@ export default class Main {
 
         Main.window.loadURL(indexURL);
         Main.window.on('closed', Main.onClose);
+    }
+
+    private static sendMessageToWindow(message, ...args) {
+      if (Main.window) {
+        Main.window.webContents.send(message, ...args)
+      }
+    }
+
+    private static createApplicationMenu() {
+      const template: MenuItemConstructorOptions[] = [
+        {
+          label: 'Project',
+          submenu: [
+            {
+              label: 'Close project',
+              click: () => Main.sendMessageToWindow('close-project')
+            },
+            {
+              label: 'Rename project',
+              click: () => Main.sendMessageToWindow('rename-project')
+            },
+            {
+              label: 'Clear build cache',
+              click: () => Main.sendMessageToWindow('clear-build-cache')
+            },
+            {
+              type: 'separator'
+            },
+            {
+              label: 'Build',
+              accelerator: 'CommandOrControl+B',
+              click: () => Main.sendMessageToWindow('build-project')
+            },
+            {
+              label: 'Run',
+              accelerator: 'CommandOrControl+Enter',
+              click: () => Main.sendMessageToWindow('run-project')
+            },
+            {
+              label: 'Run current file',
+              accelerator: 'CommandOrControl+Shift+Enter',
+              click: () => Main.sendMessageToWindow('run-file')
+            }
+          ]
+        },
+
+        {
+          label: 'Edit',
+          submenu: [
+            {
+              role: 'undo'
+            },
+            {
+              role: 'redo'
+            },
+            {
+              type: 'separator'
+            },
+            {
+              role: 'cut'
+            },
+            {
+              role: 'copy'
+            },
+            {
+              role: 'paste'
+            }
+          ]
+        },
+
+        {
+          label: 'View',
+          submenu: [
+            {
+              label: 'Dark mode',
+              click: () => Main.sendMessageToWindow('dark-mode')
+            },
+            {
+              label: 'Light mode',
+              click: () => Main.sendMessageToWindow('light-mode')
+            }
+          ]
+        },
+
+        {
+          role: 'window',
+          submenu: [
+            {
+              role: 'minimize'
+            },
+            {
+              role: 'close'
+            }
+          ]
+        }
+      ];
+      if (process.platform === 'darwin') {
+        template.unshift({
+          label: 'Sygnaller',
+          submenu: [
+            {role: 'about'},
+            {type: 'separator'},
+            {role: 'services', submenu: []},
+            {type: 'separator'},
+            {role: 'hide'},
+            {role: 'hideothers'},
+            {role: 'unhide'},
+            {type: 'separator'},
+            {role: 'reload'},
+            {role: 'toggledevtools'},
+            {type: 'separator'},
+            {role: 'quit'}
+          ]
+        })
+      } else {
+        template.unshift({
+          label: 'Sygnaller',
+          submenu: [
+            {role: 'about'},
+            {type: 'separator'},
+            {role: 'reload'},
+            {role: 'toggledevtools'},
+            {type: 'separator'},
+            {role: 'quit'}
+          ]
+        })
+      }
+      const menu = Menu.buildFromTemplate(template);
+      Menu.setApplicationMenu(menu);
     }
 
     static main(app: Electron.App) {

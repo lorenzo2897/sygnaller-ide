@@ -111,11 +111,17 @@ export class SidebarComponent implements AfterViewInit {
         click: () => this.deleteFile(category, path)
       }
     ];
-    if (category == 'software' && path.endsWith('.py')) {
-      menuOptions.unshift({
+    let menuRunFileOptions: any = [
+      {
         label: `Run ${path}`,
         click: () => this.runAsMain(category, path)
-      });
+      },
+      {
+        type: 'separator'
+      }
+    ];
+    if (category == 'software' && path.endsWith('.py')) {
+      menuOptions.unshift(...menuRunFileOptions);
     }
     let menu = this.electron.remote.Menu.buildFromTemplate(menuOptions);
     menu.popup();

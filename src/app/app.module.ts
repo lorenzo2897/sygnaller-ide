@@ -23,6 +23,7 @@ import { BuildInfoComponent } from './components/build-info/build-info.component
 import { AgoPipe } from './pipes/ago.pipe';
 import {Nl2BrPipeModule} from 'nl2br-pipe';
 import { DataUriPipe } from './pipes/data-uri.pipe';
+import { RenameProjectModalComponent } from './modals/rename-project-modal/rename-project-modal.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { DataUriPipe } from './pipes/data-uri.pipe';
     ComponentBlockComponent,
     BuildInfoComponent,
     AgoPipe,
-    DataUriPipe
+    DataUriPipe,
+    RenameProjectModalComponent
   ],
   imports: [
     BrowserModule,

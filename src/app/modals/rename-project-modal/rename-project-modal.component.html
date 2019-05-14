@@ -1,0 +1,17 @@
+<sui-modal *ngIf="_open" [isClosable]="true" transitionDuration="200" (dismissed)="close.emit()" #modal>
+  <div class="header">Rename project</div>
+  <div class="content">
+    <div class="field">
+      <div class="ui fluid input">
+        <input autofocus
+               type="text"
+               placeholder="New name"
+               [(ngModel)]="projectName">
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="ui pink basic button" (click)="modal.deny()">Cancel</button>
+    <button class="ui green basic button" (click)="approved(modal)" autofocus>Rename</button>
+  </div>
+</sui-modal>

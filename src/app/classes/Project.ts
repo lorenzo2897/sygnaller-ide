@@ -65,7 +65,7 @@ export class Project {
     });
   }
 
-  private addToRecents() {
+  addToRecents() {
     let recents = Project.recentlyOpened();
     recents = recents.filter(i => i.path != this.path); // remove previous instances of myself
     recents.unshift({name: this.name, path: this.path}); // add myself in

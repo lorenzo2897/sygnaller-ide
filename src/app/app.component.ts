@@ -28,6 +28,7 @@ export class AppComponent {
   openModal_newProject = false;
   openModal_newFile = false;
   openModal_newConnection = false;
+  openModal_renameProject = false;
 
   newFileModal_dirname = null;
   newFileModal_category = null;
@@ -44,13 +45,33 @@ export class AppComponent {
               private ngZone: NgZone,
               private titleService: Title,
               private modalService: SuiModalService,
-              private pynq: Pynq) {}
+              private pynq: Pynq) {
+    this.electron.ipcRenderer.on('dark-mode', () => this.ngZone.run(() => this.setDarkMode(true)));
+    this.electron.ipcRenderer.on('light-mode', () => this.ngZone.run(() => this.setDarkMode(false)));
+    this.electron.ipcRenderer.on('close-project', () => this.ngZone.run(() => this.closeProject()));
+    this.electron.ipcRenderer.on('rename-project', () => this.ngZone.run(() => this.renameProject()));
+    this.electron.ipcRenderer.on('build-project', () => this.ngZone.run(() => this.buildProject()));
+    this.electron.ipcRenderer.on('clear-build-cache', () => this.ngZone.run(() => this.clearBuildCache()));
+    this.electron.ipcRenderer.on('run-project', () => this.ngZone.run(() => this.runProject()));
+    this.electron.ipcRenderer.on('run-file', () => this.ngZone.run(() => {
+      if (this.project && this.editorFilename && this.activeSelection.category == 'software') {
+        this.runProject('software/' + this.activeSelection.file);
+      }
+    }));
+  }
 
   alert(title: string, message: string) {
     const config = new TemplateModalConfig(this.simpleAlertModal);
     config.context = {title: title, message: message};
     this.modalService.open(config);
   }
+
+  setDarkMode(dark: boolean) {
+    Workspace.darkMode = dark;
+    this.darkTheme = dark;
+  }
+
+  /* ************************************************* Project ************************************************* */
 
   openProjectWizard() {
     this.openModal_newProject = true;
@@ -104,10 +125,18 @@ export class AppComponent {
     this.titleService.setTitle('Sygnaller');
   }
 
-  setDarkMode(dark: boolean) {
-    Workspace.darkMode = dark;
-    this.darkTheme = dark;
+  renameProject(newName?: string) {
+    if (newName) {
+      this.project.name = newName;
+      this.project.save();
+      this.project.addToRecents();
+      this.titleService.setTitle(this.project.name + ' - Sygnaller');
+    } else if (this.project) {
+      this.openModal_renameProject = true;
+    }
   }
+
+  /* ************************************************ Files ************************************************ */
 
   selectionChanged(selection: SidebarSelection) {
     if (!this.saveFile()) return; // ensure we save before moving away!
@@ -250,6 +279,8 @@ export class AppComponent {
     )
   }
 
+  /* ************************************************ Pynq ************************************************ */
+
   newConnectionWizard() {
     this.openModal_newConnection = true;
   }
@@ -268,7 +299,7 @@ export class AppComponent {
   }
 
   async runProject(target='software/main.py') {
-    if (this.pynq.connectionStatus != ConnectionStatus.CONNECTED) {
+    if (this.project == null || this.pynq.connectionStatus != ConnectionStatus.CONNECTED) {
       this.ngZone.run(() => {
         return this.alert('Board not connected', 'You must connect to a Pynq board to run your projects.');
       });
@@ -296,6 +327,12 @@ export class AppComponent {
   }
 
   async buildProject() {
+    if (this.project == null || this.pynq.connectionStatus != ConnectionStatus.CONNECTED) {
+      this.ngZone.run(() => {
+        return this.alert('Board not connected', 'You must connect to a Pynq board to run your projects.');
+      });
+      return;
+    }
     try {
       this.saveFile();
       await this.project.save();
@@ -320,6 +357,16 @@ export class AppComponent {
   goToBuildPage() {
     this.activeSelection = {category: 'tools', file: 'build'};
     this.selectionChanged(this.activeSelection);
+  }
+
+  clearBuildCache() {
+    if (this.project == null || this.pynq.connectionStatus != ConnectionStatus.CONNECTED) {
+      this.ngZone.run(() => {
+        return this.alert('Board not connected', 'You must connect to a Pynq board to run your projects.');
+      });
+      return;
+    }
+    this.pynq.clearBuildCache(this.project.shortPath);
   }
 
 }
