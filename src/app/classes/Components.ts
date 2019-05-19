@@ -14,7 +14,7 @@ export class VerilogModule {
   ports: VerilogPort[] = [];
 
   static extractFrom(sourceCode: string): VerilogModule[] {
-    let regexModule = /module\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\((.*?)\);/sig;
+    let regexModule = /module\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\((.*?)\)/sig;
     let regexPort = /(input|output)\s+(wire\s|reg\s)?\s*(\[([0-9]+)\s*:\s*([0-9]+)\]\s*)?([a-zA-Z_][a-zA-Z0-9_]*)/si;
     let regexIdentifier = /^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*$/si;
 

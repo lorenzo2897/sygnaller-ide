@@ -66,4 +66,12 @@ export class ComponentEditorComponent implements OnInit {
     this.project.save();
   }
 
+  clearVideoOut(except: string) {
+    this.project.components.forEach(c => {
+      if (c.moduleName != except) {
+        c.bindings = c.bindings.filter(b => b.binding != 'video out');
+      }
+    })
+  }
+
 }

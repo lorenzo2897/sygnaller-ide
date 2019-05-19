@@ -16,6 +16,7 @@ export class ComponentBlockComponent implements OnInit {
   private _bindings: ComponentBinding[];
   private _bindingsMap: Map<string, string> = new Map();
   @Output() bindingsChange: EventEmitter<ComponentBinding[]> = new EventEmitter();
+  @Output() clearVideoOut: EventEmitter<void> = new EventEmitter();
 
   constructor() { }
 
@@ -47,6 +48,10 @@ export class ComponentBlockComponent implements OnInit {
   setBinding(port: string, to: string) {
     if (to == 'scope') {
       this.bindings = this._bindings.filter(b => b.binding != 'scope');
+    }
+    else if (to == 'video out') {
+      this.bindings = this._bindings.filter(b => b.binding != 'video out');
+      this.clearVideoOut.emit();
     }
     this.bindings = this._bindings.filter(b => b.portName != port).concat([{
       portName: port,

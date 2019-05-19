@@ -359,14 +359,15 @@ export class AppComponent {
     this.selectionChanged(this.activeSelection);
   }
 
-  clearBuildCache() {
+  async clearBuildCache() {
     if (this.project == null || this.pynq.connectionStatus != ConnectionStatus.CONNECTED) {
       this.ngZone.run(() => {
         return this.alert('Board not connected', 'You must connect to a Pynq board to manage the cache.');
       });
       return;
     }
-    this.pynq.clearBuildCache(this.project.shortPath);
+    await this.pynq.clearBuildCache(this.project.shortPath);
+    this.alert('Cache cleared', 'The build cache has been cleared. Successive hardware builds will start from scratch.')
   }
 
 }

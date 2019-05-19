@@ -10,6 +10,9 @@
         <div class="menu" suiDropdownMenu>
           <div class="item" (click)="removeBinding(p.name)">data in</div>
           <div class="item" (click)="setBinding(p.name, 'clock')">clock</div>
+          <div class="item" (click)="setBinding(p.name, 'video in')">video in</div>
+          <div class="item" (click)="setBinding(p.name, 'video x')">video x</div>
+          <div class="item" (click)="setBinding(p.name, 'video y')">video y</div>
         </div>
       </td>
     </tr>
@@ -36,6 +39,7 @@
         {{_bindingsMap.get(p.name) ? _bindingsMap.get(p.name): 'data out'}}
         <div class="menu" suiDropdownMenu>
           <div class="item" (click)="removeBinding(p.name)">data out</div>
+          <div class="item" (click)="setBinding(p.name, 'video out')">video out</div>
           <div class="item" (click)="setBinding(p.name, 'scope')">scope</div>
         </div>
       </td>
