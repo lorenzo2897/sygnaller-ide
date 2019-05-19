@@ -2,6 +2,7 @@
 import {ElectronService} from 'ngx-electron';
 import * as fs from 'fs';
 import {ComponentSpec} from './Components';
+import {demoMainPy} from './DemoMainPy';
 
 const PROJECT_JSON_FILE = 'project.json';
 
@@ -137,17 +138,15 @@ export class Project {
 
   /* *********************** Static methods *********************** */
 
-  static create(electron: ElectronService, name: string, path: string) : Promise<Project> {
-    return new Promise<Project>((resolve, reject) => {
-      let p = new Project(electron, path);
-      p.name = name;
-      p.writePropertiesToFile()
-        .then(() => {
-          p.addToRecents();
-          resolve(p);
-        })
-        .catch(e => reject(e));
-    });
+  static async create(electron: ElectronService, name: string, path: string) : Promise<Project> {
+    let p = new Project(electron, path);
+    p.name = name;
+    await p.writePropertiesToFile();
+    await p.listSoftwareFiles();
+    const mainPy = p.remote_path.resolve(path, 'software/main.py');
+    p.remote_fs.writeFile(mainPy, demoMainPy, () => {});
+    p.addToRecents();
+    return p;
   }
 
   static load(electron: ElectronService, path: string) : Promise<Project> {
