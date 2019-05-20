@@ -7,3 +7,32 @@
   background: #272823;
   color: rgba(255, 255, 255, 0.76);
 }
+
+.pink {
+  color: #e03997;
+}
+
+.sub {
+  flex: 1;
+  text-align: center;
+}
+
+h4 {
+  margin-top: 30px;
+  margin-bottom: 12px;
+}
+
+a {
+  cursor: pointer;
+}
+
+img {
+  width: 100%;
+  max-width: 260px;
+  padding: 2px 20px;
+}
+
+.more-details {
+  font-style: italic;
+  margin: -6px 0 20px;
+}
