@@ -475,11 +475,11 @@ export class Pynq {
     }
   }
 
-  async getVideoStream() {
+  async getVideoStream(flushCache: boolean) {
     try {
       let resp: any = await this.http.post(
         `http://${this.connectedIp}:8000/python_video_stream`,
-        {},
+        {flushCache: flushCache},
         {responseType: 'arraybuffer', observe: 'response'}
         ).toPromise();
       if (resp.headers.has('x-video-error')) {

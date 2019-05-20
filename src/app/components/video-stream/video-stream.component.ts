@@ -11,13 +11,13 @@ export class VideoStreamComponent implements OnInit, OnDestroy {
   @Input() pynq: Pynq;
 
   img: string = null;
-  error: string = 'No active video';
+  error: string = 'Loading';
   timeout = null;
 
   constructor() { }
 
   ngOnInit() {
-    this.check();
+    this.check(true);
   }
 
   ngOnDestroy() {
@@ -35,13 +35,13 @@ export class VideoStreamComponent implements OnInit, OnDestroy {
     });
   }
 
-  async check() {
+  async check(flushCache = false) {
     try {
-      let frame: ArrayBuffer = await this.pynq.getVideoStream();
+      let frame: ArrayBuffer = await this.pynq.getVideoStream(flushCache);
       if (frame.byteLength > 100) {
         this.img = await this.arrayBufferToBase64(frame);
+        this.error = null;
       }
-      this.error = null;
     } catch (e) {
       if (e != 'USE_CACHED') {
         this.img = null;
