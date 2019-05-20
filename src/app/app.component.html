@@ -177,6 +177,12 @@
     (stopBuild)="stopBuilding()">
   </app-build-info>
 
+  <app-video-stream
+    class="main-content"
+    *ngIf="project != null && activeSelection?.category == 'tools' && activeSelection?.file == 'video'"
+    [pynq]="pynq">
+  </app-video-stream>
+
   <div class="main-content image-preview"
        *ngIf="imageViewerPath">
     <img [src]="imageViewerPath" />

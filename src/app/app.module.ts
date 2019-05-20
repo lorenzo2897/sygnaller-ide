@@ -24,6 +24,7 @@ import { AgoPipe } from './pipes/ago.pipe';
 import {Nl2BrPipeModule} from 'nl2br-pipe';
 import { DataUriPipe } from './pipes/data-uri.pipe';
 import { RenameProjectModalComponent } from './modals/rename-project-modal/rename-project-modal.component';
+import { VideoStreamComponent } from './components/video-stream/video-stream.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { RenameProjectModalComponent } from './modals/rename-project-modal/renam
     BuildInfoComponent,
     AgoPipe,
     DataUriPipe,
-    RenameProjectModalComponent
+    RenameProjectModalComponent,
+    VideoStreamComponent
   ],
   imports: [
     BrowserModule,

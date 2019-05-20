@@ -474,6 +474,27 @@ export class Pynq {
       console.log(e);
     }
   }
+
+  async getVideoStream() {
+    try {
+      let resp: any = await this.http.post(
+        `http://${this.connectedIp}:8000/python_video_stream`,
+        {},
+        {responseType: 'arraybuffer', observe: 'response'}
+        ).toPromise();
+      if (resp.headers.has('x-video-error')) {
+        throw resp.headers.get('x-video-error');
+      }
+      return resp.body;
+    } catch (err) {
+      if (err instanceof HttpErrorResponse || err instanceof DOMException) {
+        console.log('Connection error', err);
+        throw 'The device is not responding. Check your connections and try again.';
+      } else {
+        throw err;
+      }
+    }
+  }
 }
 
 /* **************************************************************** */
