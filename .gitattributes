@@ -1,0 +1,4 @@
+/semantic/* linguist-vendored
+/src/assets/*.css linguist-generated=true
+/src/assets/*.js linguist-generated=true
+
