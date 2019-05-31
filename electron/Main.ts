@@ -110,6 +110,9 @@ export default class Main {
               type: 'separator'
             },
             {
+              role: 'selectAll'
+            },
+            {
               role: 'cut'
             },
             {
