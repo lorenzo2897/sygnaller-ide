@@ -24,11 +24,27 @@
   </div>
   <div class="content">
     <p>The build took {{buildTimeTaken}}.</p>
+
+
+    <table class="ui celled table">
+      <thead>
+      <tr>
+        <th width="50%">Clock frequency</th>
+        <th width="50%">Clock period</th>
+      </tr>
+      </thead>
+      <tr>
+        <td>100 MHz</td>
+        <td>10 ns</td>
+      </tr>
+    </table>
+
+
     <table class="ui celled table">
       <thead>
         <tr>
-          <th colspan="2">Setup slack</th>
-          <th colspan="2">Hold slack</th>
+          <th colspan="2" width="50%">Setup slack</th>
+          <th colspan="2" width="50%">Hold slack</th>
         </tr>
       </thead>
       <tr>
@@ -46,12 +62,6 @@
             {{WHS >= 0 ? 'of margin to spare' : 'over the limit'}}
           </span>
         </td>
-      </tr>
-      <tr>
-        <td>Total negative slack</td>
-        <td>{{TNS}} ns</td>
-        <td>Total hold slack</td>
-        <td>{{THS}} ns</td>
       </tr>
     </table>
 
