@@ -8,7 +8,7 @@
     </div>
     <div class="item"
          *ngFor="let c of availableModules | keyvalue"
-         (click)="newComponent(c.value)">
+         (click)="newComponent(c.value.name)">
       {{c.value.name}}
     </div>
   </div>

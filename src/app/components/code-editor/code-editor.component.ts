@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {AceEditorComponent} from 'ng2-ace-editor';
+import {ElectronService} from 'ngx-electron';
 
 @Component({
   selector: 'app-code-editor',
@@ -10,6 +11,8 @@ export class CodeEditorComponent implements AfterViewInit {
 
   @Input() contents: string = '';
   @Output() contentsChange: EventEmitter<string> = new EventEmitter<string>();
+
+  @Output() buildNewComponent: EventEmitter<string> = new EventEmitter<string>();
 
   @Input()
   set filename(val: string) {
@@ -35,6 +38,7 @@ export class CodeEditorComponent implements AfterViewInit {
     this.editor.getEditor().focus();
     this.editor.getEditor().getSession().setUndoManager(new window['ace'].UndoManager());
     this.editor.getEditor().selection.moveTo(0, 0);
+    this.lookForVerilogModules();
   }
 
   _dark: boolean = false;
@@ -59,7 +63,9 @@ export class CodeEditorComponent implements AfterViewInit {
     scrollPastEnd: 0.5
   };
 
-  constructor() { }
+  verilogModules: Map<number, string> = new Map();
+
+  constructor(private electron: ElectronService) { }
 
   ngAfterViewInit() {
     this.editor.getEditor().commands.addCommand({
@@ -70,26 +76,76 @@ export class CodeEditorComponent implements AfterViewInit {
       }
     });
 
-    // this.editor.getEditor().on('guttermousedown', e => {
-    //   console.log(e);
-    //   let target = e.domEvent.target;
-    //
-    //   if (target.className.indexOf("ace_gutter-cell") == -1)
-    //     return;
-    //   if (!this.editor.getEditor().isFocused())
-    //     return;
-    //   if (e.clientX > 25 + target.getBoundingClientRect().left)
-    //     return;
-    //
-    //   let row = e.getDocumentPosition().row;
-    //   e.editor.session.setBreakpoint(row);
-    //   e.stop()
-    // })
+    this.editor.getEditor().on('guttermousedown', e => {
+      console.log(e);
+      let target = e.domEvent.target;
+
+      if (target.className.indexOf("ace_gutter-cell") == -1)
+        return;
+      if (!this.editor.getEditor().isFocused())
+        return;
+      if (e.clientX > 25 + target.getBoundingClientRect().left)
+        return;
+
+      let row = e.getDocumentPosition().row;
+      let breakpoints = e.editor.session.getBreakpoints(row, 0);
+      if(breakpoints[row]) {
+        this.moduleContextMenu(row);
+      }
+      e.stop()
+    })
 
   }
 
   textChanged() {
     this.contentsChange.emit(this.contents);
+    this.lookForVerilogModules();
+  }
+
+  lookForVerilogModules() {
+    if (this.editorMode != 'verilog') return;
+
+    let regexModule = /module\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*\((.*?)\)/sig;
+
+    this.verilogModules.clear();
+
+    let m;
+    let currChar = 0;
+    let currLine = 0;
+    while ((m = regexModule.exec(this.contents))) {
+      let index = m.index;
+      while (currChar < index) {
+        if (this.contents.charAt(currChar) == '\n') ++currLine;
+        ++currChar;
+      }
+      this.verilogModules.set(currLine, m[1]);
+    }
+    this.editor.getEditor().session.clearBreakpoints();
+    this.verilogModules.forEach((_, line) => {
+      this.editor.getEditor().session.setBreakpoint(line);
+    });
+  }
+
+  moduleContextMenu(row: number) {
+    let menuOptions: any = [
+      {
+        label: 'module ' + this.verilogModules.get(row),
+        enabled: false
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Create component',
+        click: () => this.newComponent(this.verilogModules.get(row))
+      }
+    ];
+    let menu = this.electron.remote.Menu.buildFromTemplate(menuOptions);
+    menu.popup();
+  }
+
+  newComponent(name: string) {
+    this.buildNewComponent.emit(name);
   }
 
 }

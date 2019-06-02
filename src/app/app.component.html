@@ -147,6 +147,7 @@
     class="main-content"
     *ngIf="project != null && editorFilename != null"
     [(contents)]="editorContents"
+    (buildNewComponent)="buildNewComponent($event)"
     [darkTheme]="darkTheme"
     [filename]="editorFilename">
   </app-code-editor>
@@ -161,6 +162,7 @@
   </app-terminal>
 
   <app-component-editor
+    #componentEditor
     class="main-content"
     *ngIf="project != null && activeSelection?.category == 'tools' && activeSelection?.file == 'components'"
     [darkTheme]="darkTheme"

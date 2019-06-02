@@ -11,6 +11,9 @@ import {forEach} from '@angular/router/src/utils/collection';
 })
 export class ComponentEditorComponent implements OnInit {
 
+  _ready = null;
+  ready = new Promise(resolve => this._ready = resolve);
+
   @Input() darkTheme: boolean = false;
   @Input() project: Project = null;
 
@@ -38,10 +41,22 @@ export class ComponentEditorComponent implements OnInit {
       if (!this.availableModules.has(c.moduleName)) {
         this.deleteComponent(c);
       }
-    })
+    });
+
+    this._ready();
   }
 
-  newComponent(module: VerilogModule) {
+  async newComponent(moduleName: string) {
+    await this.ready;
+
+    if (!this.availableModules.has(moduleName)) {
+      this.onError.emit({
+        title: 'Module not found',
+        message: `The module "${moduleName}" was not found in your Verilog code. Make sure it is defined in code before attempting to build a component from it.`
+      });
+    }
+    let module = this.availableModules.get(moduleName);
+
     if (this.project.components.has(module.name)) {
       this.onError.emit({
         title: 'Module already in use',

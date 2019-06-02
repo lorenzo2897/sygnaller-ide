@@ -6,6 +6,7 @@ import {Title} from '@angular/platform-browser';
 import {SidebarSelection} from './components/sidebar/sidebar.component';
 import {ConnectionStatus, Pynq} from './classes/Pynq';
 import {ModalTemplate, SuiModalService, TemplateModalConfig} from 'ng2-semantic-ui';
+import {ComponentEditorComponent} from './components/component-editor/component-editor.component';
 
 
 @Component({
@@ -39,6 +40,9 @@ export class AppComponent {
 
   @ViewChild('simpleAlertModal')
   public simpleAlertModal:ModalTemplate<any, void, void>;
+
+  @ViewChild('componentEditor')
+  public componentEditor: ComponentEditorComponent;
 
 
   constructor(private electron: ElectronService,
@@ -277,6 +281,12 @@ export class AppComponent {
         }
       }
     )
+  }
+
+  buildNewComponent(name: string) {
+    this.activeSelection = {category: 'tools', file: 'components'};
+    this.selectionChanged(this.activeSelection);
+    this.ngZone.run(() => this.componentEditor.newComponent(name));
   }
 
   /* ************************************************ Pynq ************************************************ */
