@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {AceEditorComponent} from 'ng2-ace-editor';
 import {ElectronService} from 'ngx-electron';
+import {Project} from '../../classes/Project';
 
 @Component({
   selector: 'app-code-editor',
@@ -10,6 +11,7 @@ import {ElectronService} from 'ngx-electron';
 export class CodeEditorComponent implements AfterViewInit {
 
   @Input() contents: string = '';
+  @Input() project: Project;
   @Output() contentsChange: EventEmitter<string> = new EventEmitter<string>();
 
   @Output() buildNewComponent: EventEmitter<string> = new EventEmitter<string>();
@@ -127,6 +129,9 @@ export class CodeEditorComponent implements AfterViewInit {
   }
 
   moduleContextMenu(row: number) {
+    let moduleName = this.verilogModules.get(row);
+    let isInUse = this.project.components.has(moduleName);
+
     let menuOptions: any = [
       {
         label: 'module ' + this.verilogModules.get(row),
@@ -135,9 +140,12 @@ export class CodeEditorComponent implements AfterViewInit {
       {
         type: 'separator'
       },
-      {
+      !isInUse ? {
         label: 'Create component',
-        click: () => this.newComponent(this.verilogModules.get(row))
+        click: () => this.newComponent(moduleName)
+      } : {
+        label: 'Go to component',
+        click: () => this.newComponent(null)
       }
     ];
     let menu = this.electron.remote.Menu.buildFromTemplate(menuOptions);

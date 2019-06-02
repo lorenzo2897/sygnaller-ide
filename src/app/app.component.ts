@@ -286,7 +286,7 @@ export class AppComponent {
   buildNewComponent(name: string) {
     this.activeSelection = {category: 'tools', file: 'components'};
     this.selectionChanged(this.activeSelection);
-    this.ngZone.run(() => this.componentEditor.newComponent(name));
+    if (name) this.ngZone.run(() => this.componentEditor.newComponent(name));
   }
 
   /* ************************************************ Pynq ************************************************ */

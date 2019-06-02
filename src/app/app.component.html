@@ -148,6 +148,7 @@
     *ngIf="project != null && editorFilename != null"
     [(contents)]="editorContents"
     (buildNewComponent)="buildNewComponent($event)"
+    [project]="project"
     [darkTheme]="darkTheme"
     [filename]="editorFilename">
   </app-code-editor>
