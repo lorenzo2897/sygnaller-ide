@@ -21,6 +21,8 @@ export class ComponentEditorComponent implements OnInit {
 
   availableModules: Map<string, VerilogModule> = new Map();
 
+  componentWithVideoOut: string = null;
+
   constructor(private electron: ElectronService) {}
 
   async ngOnInit() {
@@ -40,6 +42,12 @@ export class ComponentEditorComponent implements OnInit {
     this.project.components.forEach(c => {
       if (!this.availableModules.has(c.moduleName)) {
         this.deleteComponent(c);
+      }
+    });
+
+    this.project.components.forEach(c => {
+      if (c.bindings.find(b => b.binding == 'video out')) {
+        this.componentWithVideoOut = c.moduleName;
       }
     });
 
@@ -82,6 +90,7 @@ export class ComponentEditorComponent implements OnInit {
   }
 
   clearVideoOut(except: string) {
+    this.componentWithVideoOut = except;
     this.project.components.forEach(c => {
       if (c.moduleName != except) {
         c.bindings = c.bindings.filter(b => b.binding != 'video out');

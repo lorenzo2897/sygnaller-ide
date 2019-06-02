@@ -56,6 +56,11 @@
 <span class="comment"># Reading output ports</span>
 <span>result <span class="keyword">=</span> hw.<span class="object">{{c.value.moduleName}}</span>.port_name
 </span>
+<span *ngIf="c.key == componentWithVideoOut"><span class="comment"># Processing video frames</span>
+<span class="keyword">with</span> hw.<span class="object">video.start</span>():
+    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="object">range</span>(100):
+        hw.<span class="object">video.process_frame</span>()
+</span>
 </pre>
     </div>
   </div>
