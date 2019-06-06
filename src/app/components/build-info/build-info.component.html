@@ -138,5 +138,14 @@
   </div>
 </div>
 
+<div class="ui card" *ngIf="!pynq.isBuilding && _lastBuildStatus == ''">
+  <div class="content">
+    <h4><i class="yellow asterisk icon"></i> Never built</h4>
+  </div>
+  <div class="content build-report">
+    Create some hardware files and build them by clicking <strong>Build</strong> in the top toolbar.
+  </div>
+</div>
+
 <h3>Build logs</h3>
 <textarea #textarea readonly [value]="pynq.logs" (scroll)="onScroll()"></textarea>
