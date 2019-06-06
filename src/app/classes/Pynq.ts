@@ -241,7 +241,7 @@ export class Pynq {
 
       for (let f of files) {
         filesArray.push({
-          path: nodePath.relative(project.path, f),
+          path: nodePath.relative(project.path, f).replace('\\', '/'),
           contents: modified(f) ? await readToBase64(f) : null
         });
       }
