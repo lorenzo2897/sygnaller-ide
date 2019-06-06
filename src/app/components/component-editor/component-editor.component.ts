@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Project} from '../../classes/Project';
 import {ComponentSpec, VerilogModule} from '../../classes/Components';
 import {ElectronService} from 'ngx-electron';
-import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-component-editor',

@@ -16,7 +16,7 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
   @Input() pynq: Pynq;
   private _lastBuildStatus: string;
 
-  @Output() linkClicked: EventEmitter<SidebarSelection> = new EventEmitter();
+  @Output() linkClicked: EventEmitter<FileLink> = new EventEmitter();
   @Output() stopBuild: EventEmitter<void> = new EventEmitter();
 
   buildTimeTaken: string = '';
@@ -241,8 +241,8 @@ export class BuildInfoComponent implements OnInit, AfterViewChecked {
   }
 
 
-  onFileClick(link: SidebarSelection) {
-    if (link) this.linkClicked.emit(link);
+  onFileClick(link: SidebarSelection, line: number) {
+    if (link) this.linkClicked.emit({selection: link, line: line});
   }
 
 
@@ -257,4 +257,9 @@ interface BuildError {
   file: string,
   line: number,
   link: SidebarSelection
+}
+
+interface FileLink {
+  selection: SidebarSelection,
+  line: number
 }

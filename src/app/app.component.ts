@@ -24,6 +24,7 @@ export class AppComponent {
   editorFilename: string = null;
   editorOriginalContents: string = '';
   editorContents: string = '';
+  editorErrorLine: number = null;
   imageViewerPath: string = null;
 
   openModal_newProject = false;
@@ -176,6 +177,7 @@ export class AppComponent {
       };
 
       this.editorFilename = null;
+      this.editorErrorLine = null;
       this.imageViewerPath = null;
 
       if (isText(selection)) {

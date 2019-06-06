@@ -125,7 +125,7 @@
       <span *ngIf="err.file"
             class="error-file"
             [ngClass]="err.link ? 'error-link' : ''"
-            (click)="onFileClick(err.link)">[{{err.file}}<span *ngIf="err.line" class="error-line">:{{err.line}}</span>]</span>
+            (click)="onFileClick(err.link, err.line)">[{{err.file}}<span *ngIf="err.line" class="error-line">:{{err.line}}</span>]</span>
     </p>
   </div>
 </div>

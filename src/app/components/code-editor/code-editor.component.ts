@@ -15,6 +15,7 @@ export class CodeEditorComponent implements AfterViewInit {
   @Output() contentsChange: EventEmitter<string> = new EventEmitter<string>();
 
   @Output() buildNewComponent: EventEmitter<string> = new EventEmitter<string>();
+  @Output() openBuildInfo: EventEmitter<void> = new EventEmitter();
 
   @Input()
   set filename(val: string) {
@@ -48,6 +49,23 @@ export class CodeEditorComponent implements AfterViewInit {
   set darkTheme(val: boolean) {
     this._dark = val;
     this.editorTheme = val ? 'monokai' : 'chrome';
+  }
+
+  private errorMarker = null;
+  private errorRow = null;
+  @Input()
+  set errorLine(val: number) {
+    if (this.errorMarker) {
+      this.editor.getEditor().getSession().removeMarker(this.errorMarker);
+    }
+    if (this.errorRow) {
+      this.editor.getEditor().getSession().removeGutterDecoration(this.errorRow, 'errorGutter');
+    }
+    if (val) {
+      this.errorRow = val - 1;
+      this.errorMarker = this.editor.getEditor().getSession().addMarker(new window['ace'].Range(this.errorRow, 0, this.errorRow, 1), "errorMarker", "fullLine");
+      this.editor.getEditor().getSession().addGutterDecoration(this.errorRow, 'errorGutter');
+    }
   }
 
   _filename: string = '';
@@ -93,6 +111,8 @@ export class CodeEditorComponent implements AfterViewInit {
       let breakpoints = e.editor.session.getBreakpoints(row, 0);
       if(breakpoints[row]) {
         this.moduleContextMenu(row);
+      } else if (row == this.errorRow) {
+        this.goToBuildInfo();
       }
       e.stop()
     })
@@ -101,6 +121,7 @@ export class CodeEditorComponent implements AfterViewInit {
 
   textChanged() {
     this.contentsChange.emit(this.contents);
+    this.errorLine = null;
     this.lookForVerilogModules();
   }
 
@@ -154,6 +175,10 @@ export class CodeEditorComponent implements AfterViewInit {
 
   newComponent(name: string) {
     this.buildNewComponent.emit(name);
+  }
+
+  goToBuildInfo() {
+    this.openBuildInfo.emit();
   }
 
 }

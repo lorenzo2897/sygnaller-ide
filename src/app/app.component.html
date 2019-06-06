@@ -148,9 +148,11 @@
     *ngIf="project != null && editorFilename != null"
     [(contents)]="editorContents"
     (buildNewComponent)="buildNewComponent($event)"
+    (openBuildInfo)="activeSelection = {category: 'tools', file: 'build'}; selectionChanged({category: 'tools', file: 'build'})"
     [project]="project"
     [darkTheme]="darkTheme"
-    [filename]="editorFilename">
+    [filename]="editorFilename"
+    [errorLine]="editorErrorLine">
   </app-code-editor>
 
   <app-terminal
@@ -176,7 +178,7 @@
     *ngIf="project != null && activeSelection?.category == 'tools' && activeSelection?.file == 'build'"
     [pynq]="pynq"
     [lastBuildStatus]="pynq.lastBuildStatus"
-    (linkClicked)="activeSelection = $event; selectionChanged($event)"
+    (linkClicked)="activeSelection = $event.selection; selectionChanged($event.selection); editorErrorLine = $event.line"
     (stopBuild)="stopBuilding()">
   </app-build-info>
 
