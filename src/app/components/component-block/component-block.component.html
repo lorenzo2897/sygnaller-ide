@@ -6,7 +6,7 @@
   <table>
     <tr class="r" *ngFor="let p of inputPorts">
       <td class="r binding ui pointing dropdown" suiDropdown>
-        {{_bindingsMap.get(p.name) ? _bindingsMap.get(p.name): 'data in'}}
+        <span class="binding-box">{{_bindingsMap.get(p.name) ? _bindingsMap.get(p.name): 'data in'}} <i class="caret down grey icon"></i></span>
         <div class="menu" suiDropdownMenu>
           <div class="item" (click)="removeBinding(p.name)">data in</div>
           <div class="item" (click)="setBinding(p.name, 'clock')">clock</div>
@@ -37,7 +37,7 @@
   <table>
     <tr *ngFor="let p of outputPorts">
       <td class="l binding ui pointing dropdown" suiDropdown>
-        {{_bindingsMap.get(p.name) ? _bindingsMap.get(p.name): 'data out'}}
+        <span class="binding-box">{{_bindingsMap.get(p.name) ? _bindingsMap.get(p.name): 'data out'}} <i class="caret down grey icon"></i></span>
         <div class="menu" suiDropdownMenu>
           <div class="item" (click)="removeBinding(p.name)">data out</div>
           <div class="item" (click)="setBinding(p.name, 'video out')">video out</div>
