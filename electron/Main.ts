@@ -85,7 +85,7 @@ export default class Main {
               click: () => Main.sendMessageToWindow('build-project')
             },
             {
-              label: 'Run',
+              label: 'Run main.py',
               accelerator: 'CommandOrControl+Enter',
               click: () => Main.sendMessageToWindow('run-project')
             },
