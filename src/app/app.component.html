@@ -57,6 +57,13 @@
               </div>
             </button>
           </div>
+
+          <div class="item">
+            <button class="ui button"
+                    [ngClass]="editorFilename ? '' : 'disabled'" (click)="saveFile()">
+              <i class="save icon"></i> Save
+            </button>
+          </div>
         </div>
       </div>
     </div>
